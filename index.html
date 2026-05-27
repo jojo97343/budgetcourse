@@ -347,6 +347,11 @@
     <div class="card-title">🏪 Par catégorie</div>
     <div id="catBilan"><div class="empty"><p>Aucune donnée</p></div></div>
   </div>
+  <div class="card">
+    <div class="card-title">📈 Évolution mois par mois</div>
+    <div id="comparaisonMois"><div class="empty"><p>Archivez au moins 1 mois pour voir l'évolution</p></div></div>
+    <canvas id="bilanChart" height="180" style="margin-top:16px;display:none"></canvas>
+  </div>
 </div>
 
 <!-- TAB: RÉGLAGES -->
@@ -808,6 +813,7 @@ function renderBilan(total, budget, reste) {
         <div style="font-size:13px;font-weight:700">${fmt(val)}</div>
       </div>`).join('');
   }
+  renderComparaison(total, budget);
 }
 
 function renderArchives() {
@@ -825,9 +831,121 @@ function renderArchives() {
   }).join('');
 }
 
-// ============================================================
-// SETTINGS / ACTIONS
-// ============================================================
+function renderComparaison(totalMoisActuel, budget) {
+  const el = document.getElementById('comparaisonMois');
+  const canvas = document.getElementById('bilanChart');
+  const archives = local.archives;
+
+  // Construire la liste complète : mois archivés + mois actuel
+  const months = ['Jan','Fév','Mar','Avr','Mai','Jun','Jul','Aoû','Sep','Oct','Nov','Déc'];
+  const now = new Date();
+  const moisActuelLabel = months[now.getMonth()];
+
+  // Tous les mois (du plus ancien au plus récent + actuel)
+  const allMonths = [...archives].reverse().concat([{
+    month: moisActuelLabel + ' (en cours)',
+    total: totalMoisActuel,
+    budget: budget,
+    current: true
+  }]);
+
+  if (allMonths.length < 2) {
+    el.innerHTML = '<div class="empty"><p>Archivez au moins 1 mois pour voir l\'évolution</p></div>';
+    canvas.style.display = 'none';
+    return;
+  }
+
+  // Comparaison avec mois précédent
+  const prev = allMonths[allMonths.length - 2];
+  const curr = allMonths[allMonths.length - 1];
+  const diff = curr.total - prev.total;
+  const avg = allMonths.slice(0, -1).reduce((s, m) => s + m.total, 0) / (allMonths.length - 1);
+
+  const diffColor = diff > 0 ? 'var(--red)' : 'var(--green)';
+  const diffSign = diff > 0 ? '+' : '';
+  const diffEmoji = diff > 0 ? '📈' : '📉';
+  const vsAvgDiff = curr.total - avg;
+  const vsAvgColor = vsAvgDiff > 0 ? 'var(--red)' : 'var(--green)';
+  const vsAvgSign = vsAvgDiff > 0 ? '+' : '';
+
+  el.innerHTML = `
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">
+      <div style="background:var(--bg);border:1.5px solid var(--border);border-radius:10px;padding:12px;text-align:center">
+        <div style="font-size:11px;color:var(--text-soft);font-weight:500;text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px">vs mois dernier</div>
+        <div style="font-family:'Syne',sans-serif;font-size:20px;font-weight:800;color:${diffColor}">${diffSign}${fmt(diff)}</div>
+        <div style="font-size:12px;color:var(--text-soft);margin-top:3px">${diffEmoji} par rapport à ${prev.month.replace(' (en cours)','')}</div>
+      </div>
+      <div style="background:var(--bg);border:1.5px solid var(--border);border-radius:10px;padding:12px;text-align:center">
+        <div style="font-size:11px;color:var(--text-soft);font-weight:500;text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px">vs moyenne</div>
+        <div style="font-family:'Syne',sans-serif;font-size:20px;font-weight:800;color:${vsAvgColor}">${vsAvgSign}${fmt(vsAvgDiff)}</div>
+        <div style="font-size:12px;color:var(--text-soft);margin-top:3px">moyenne : ${fmt(avg)}</div>
+      </div>
+    </div>
+  `;
+
+  // Graphique canvas
+  canvas.style.display = 'block';
+  const ctx = canvas.getContext('2d');
+  const W = canvas.offsetWidth || 300;
+  canvas.width = W;
+  canvas.height = 180;
+  ctx.clearRect(0, 0, W, 180);
+
+  const maxVal = Math.max(...allMonths.map(m => m.total), budget || 0) * 1.15 || 1;
+  const BAR_W = Math.max(18, Math.min(40, (W - 40) / allMonths.length - 8));
+  const gap = (W - 20 - allMonths.length * BAR_W) / (allMonths.length + 1);
+  const chartH = 130;
+  const baseY = 145;
+
+  // Ligne budget
+  if (budget > 0) {
+    const budgetY = baseY - (budget / maxVal) * chartH;
+    ctx.setLineDash([4, 4]);
+    ctx.strokeStyle = '#e85d2666';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.moveTo(10, budgetY);
+    ctx.lineTo(W - 10, budgetY);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = '#e85d26aa';
+    ctx.font = '10px DM Sans, sans-serif';
+    ctx.fillText('budget', W - 48, budgetY - 4);
+  }
+
+  allMonths.forEach((m, i) => {
+    const x = gap + i * (BAR_W + gap) + 10;
+    const barH = (m.total / maxVal) * chartH;
+    const y = baseY - barH;
+    const over = budget > 0 && m.total > budget;
+    const isCurrent = !!m.current;
+
+    // Barre
+    ctx.fillStyle = isCurrent ? (over ? '#c0392b' : '#e85d26') : (over ? '#e8a0a0' : '#a8d5b8');
+    ctx.beginPath();
+    ctx.roundRect(x, y, BAR_W, barH, [4, 4, 0, 0]);
+    ctx.fill();
+
+    // Montant au dessus
+    ctx.fillStyle = over ? 'var(--red)' : '#2a2118';
+    ctx.font = `bold ${BAR_W < 28 ? 9 : 10}px Syne, sans-serif`;
+    ctx.textAlign = 'center';
+    const shortAmt = m.total >= 1000 ? (m.total/1000).toFixed(1)+'k' : Math.round(m.total)+'';
+    ctx.fillText(shortAmt, x + BAR_W / 2, y - 4);
+
+    // Label mois
+    ctx.fillStyle = '#7a6a55';
+    ctx.font = `${BAR_W < 28 ? 9 : 10}px DM Sans, sans-serif`;
+    const label = m.month.replace(' (en cours)', '*').split(' ')[0];
+    ctx.fillText(label, x + BAR_W / 2, baseY + 14);
+  });
+
+  // Légende * = en cours
+  ctx.fillStyle = '#7a6a55';
+  ctx.font = '10px DM Sans, sans-serif';
+  ctx.textAlign = 'left';
+  ctx.fillText('* mois en cours', 10, 175);
+}
 function saveSettings() {
   local.budget = parseFloat(document.getElementById('set-budget').value) || 0;
   local.userName = document.getElementById('set-name').value.trim() || 'Maman';
