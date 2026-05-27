@@ -279,10 +279,7 @@
       <div class="card-title">➕ Ajouter un article</div>
       <div class="input-group">
         <input type="text" id="fli-name" placeholder="Article à ajouter…" autocomplete="off">
-        <div class="input-row">
-          <input type="number" id="fli-price" placeholder="Prix estimé (€)" step="0.01" min="0" style="flex:1">
-          <input type="text" id="fli-who" placeholder="Ton prénom" style="flex:1">
-        </div>
+        <input type="text" id="fli-who" placeholder="Ton prénom">
       </div>
       <button class="btn btn-primary" onclick="addListItemFamily()">+ Ajouter à la liste</button>
     </div>
@@ -302,19 +299,7 @@
       <div class="card-title">➕ Ajouter un article</div>
       <div class="input-group">
         <input type="text" id="li-name" placeholder="Article (ex : lait, pâtes…)" autocomplete="off">
-        <div class="input-row">
-          <input type="number" id="li-price" placeholder="Prix estimé (€)" step="0.01" min="0" style="flex:1">
-          <select class="cat-select" id="li-cat" style="flex:1;font-size:13px">
-            <option>🛒 Divers</option>
-            <option>🥩 Viande/Poisson</option>
-            <option>🥦 Légumes/Fruits</option>
-            <option>🥛 Laitier</option>
-            <option>🍞 Boulangerie</option>
-            <option>🧴 Hygiène</option>
-            <option>🥫 Épicerie</option>
-            <option>🍷 Boissons</option>
-          </select>
-        </div>
+  
       </div>
       <button class="btn btn-primary" onclick="addListItem()">+ Ajouter à la liste</button>
     </div>
@@ -329,16 +314,8 @@
     <div id="shoppingList">
       <div class="empty"><div class="empty-icon">📝</div><p>La liste est vide</p></div>
     </div>
-    <div class="list-total-bar" id="listTotalBar">
-      <div>
-        <div class="list-total-label">Total estimé</div>
-        <div style="font-size:11px;color:var(--text-soft);margin-top:2px" id="listCheckedInfo">—</div>
-      </div>
-      <div class="list-total-value" id="listTotal">0 €</div>
-    </div>
-    <div id="mamanActionsBar" style="margin-top:12px">
-      <button class="btn btn-primary" onclick="importListAsExpense()">✅ Valider les courses cochées</button>
-    </div>
+
+
   </div>
 </div>
 
@@ -507,7 +484,7 @@ async function init() {
     document.getElementById('nav-add').style.display = 'none';
     document.getElementById('nav-bilan').style.display = 'none';
     document.getElementById('nav-settings').style.display = 'none';
-    document.getElementById('mamanActionsBar').style.display = 'none';
+
     document.getElementById('mamanView').style.display = 'none';
     document.getElementById('familleView').style.display = 'block';
     document.getElementById('tab-add').classList.remove('active');
@@ -577,25 +554,20 @@ function subscribeRealtime() {
 
 async function addListItem() {
   const name = document.getElementById('li-name').value.trim();
-  const price = parseFloat(document.getElementById('li-price').value) || 0;
-  const cat = document.getElementById('li-cat').value;
   if (!name) { toast('Entrez un article'); return; }
-  const { error } = await sb.from('shopping_lists').insert({ list_code: local.listCode, name, price, checked: false, added_by: local.userName || 'Maman' });
+  const { error } = await sb.from('shopping_lists').insert({ list_code: local.listCode, name, price: 0, checked: false, added_by: local.userName || 'Maman' });
   if (error) { toast('Erreur réseau'); return; }
   document.getElementById('li-name').value = '';
-  document.getElementById('li-price').value = '';
   await loadShoppingList(); renderShoppingList(); updateListBadge();
 }
 
 async function addListItemFamily() {
   const name = document.getElementById('fli-name').value.trim();
-  const price = parseFloat(document.getElementById('fli-price').value) || 0;
   const who = document.getElementById('fli-who').value.trim() || 'Famille';
   if (!name) { toast('Entrez un article'); return; }
-  const { error } = await sb.from('shopping_lists').insert({ list_code: FAMILLE_CODE, name, price, checked: false, added_by: who });
+  const { error } = await sb.from('shopping_lists').insert({ list_code: FAMILLE_CODE, name, price: 0, checked: false, added_by: who });
   if (error) { toast('Erreur réseau'); return; }
   document.getElementById('fli-name').value = '';
-  document.getElementById('fli-price').value = '';
   toast('Article ajouté ✓');
   await loadShoppingList(); renderShoppingList();
 }
@@ -619,20 +591,7 @@ async function clearChecked() {
   toast('Articles cochés supprimés');
 }
 
-async function importListAsExpense() {
-  const checked = shoppingItems.filter(i => i.checked);
-  if (checked.length === 0) { toast('Cochez d\'abord des articles'); return; }
-  const total = checked.reduce((s, i) => s + (i.price || 0), 0);
-  if (total <= 0) { toast('Aucun prix renseigné sur les articles cochés'); return; }
-  local.expenses.push({ id: uid(), date: new Date().toISOString(), name: `Courses (${checked.length} articles)`, amount: total, cat: '🛒 Courses' });
-  saveLocal();
-  // Supprimer les cochés de Supabase
-  await sb.from('shopping_lists').delete().eq('list_code', local.listCode).eq('checked', true);
-  await loadShoppingList();
-  renderAll();
-  toast('Courses ajoutées au budget ✓');
-  showTab('add');
-}
+
 
 // ============================================================
 // PARTAGE
@@ -669,12 +628,13 @@ function addExpense() {
   const amount = parseFloat(document.getElementById('inp-amount').value);
   const cat = document.getElementById('inp-cat').value;
   if (!name || isNaN(amount) || amount <= 0) { toast('Remplissez le nom et le montant'); return; }
-  local.expenses.push({ id: uid(), date: new Date().toISOString(), name, amount, cat });
-  saveLocal();
+  // Optimistic : on vide les champs et on render IMMÉDIATEMENT
   document.getElementById('inp-name').value = '';
   document.getElementById('inp-amount').value = '';
-  toast('Dépense ajoutée ✓');
+  local.expenses.push({ id: uid(), date: new Date().toISOString(), name, amount, cat });
+  saveLocal();
   renderAll();
+  toast('Dépense ajoutée ✓');
 }
 
 function deleteExpense(id) {
@@ -786,17 +746,13 @@ function renderShoppingList() {
       <div class="checkbox" onclick="toggleItem('${item.id}')">${item.checked ? '✓' : ''}</div>
       <div class="item-name">${item.name}</div>
       <div style="display:flex;align-items:center;gap:8px">
-        <div class="item-price">${item.price > 0 ? fmt(item.price) : ''}</div>
+
         <div class="item-by">${item.added_by || ''}</div>
         ${canDelete ? `<button class="btn-danger-sm" onclick="deleteListItem('${item.id}')">✕</button>` : ''}
       </div>
     </div>`).join('');
 
-  const totalEst = shoppingItems.reduce((s, i) => s + (i.price || 0), 0);
   const checkedCount = shoppingItems.filter(i => i.checked).length;
-  const checkedTotal = shoppingItems.filter(i => i.checked).reduce((s, i) => s + (i.price || 0), 0);
-  document.getElementById('listTotal').textContent = fmt(totalEst);
-  document.getElementById('listCheckedInfo').textContent = `${checkedCount} coché(s) · ${fmt(checkedTotal)}`;
 }
 
 function updateListBadge() {
