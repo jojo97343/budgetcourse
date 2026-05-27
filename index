@@ -597,7 +597,7 @@ async function clearChecked() {
 // PARTAGE
 // ============================================================
 function shareList() {
-  const url = `${window.location.origin}${window.location.pathname}?liste=${local.listCode}`;
+  const url = `https://jojo97343.github.io/budgetcourse/?liste=${local.listCode}`;
   document.getElementById('shareUrl').textContent = url;
   document.getElementById('shareModal').classList.add('open');
 }
@@ -736,8 +736,6 @@ function renderShoppingList() {
   const listEl = document.getElementById('shoppingList');
   if (shoppingItems.length === 0) {
     listEl.innerHTML = '<div class="empty"><div class="empty-icon">📝</div><p>La liste est vide</p></div>';
-    document.getElementById('listTotal').textContent = '0 €';
-    document.getElementById('listCheckedInfo').textContent = '—';
     return;
   }
   const canDelete = !IS_FAMILLE;
