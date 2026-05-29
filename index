@@ -744,7 +744,11 @@ function renderShoppingList() {
     return;
   }
   const canDelete = !IS_FAMILLE;
-  listEl.innerHTML = shoppingItems.map(item => `
+  const sorted = [...shoppingItems].sort((a, b) => {
+    if (a.checked !== b.checked) return a.checked ? 1 : -1;
+    return a.name.localeCompare(b.name, 'fr');
+  });
+  listEl.innerHTML = sorted.map(item => `
     <div class="shopping-item ${item.checked ? 'checked' : ''}">
       <div class="checkbox" onclick="toggleItem('${item.id}')">${item.checked ? '✓' : ''}</div>
       <div class="item-name">${item.name}</div>
