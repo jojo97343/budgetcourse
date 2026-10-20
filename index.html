@@ -246,6 +246,7 @@
 
   /* TIRAGE AU SORT */
   .suggest-cta { margin: 14px 16px 0; width: calc(100% - 32px); border: 0; background: var(--surface); border-radius: var(--r-md); padding: 14px 16px; display: flex; align-items: center; gap: 12px; text-align: left; }
+  .suggest-cta[hidden] { display: none; }
   .suggest-cta:active { background: var(--soft); }
   .suggest-cta .v { font-family: var(--serif); font-size: 17px; font-weight: 700; }
   .suggest-cta .k { font-size: 12px; color: var(--muted); }
@@ -257,6 +258,22 @@
   .sugg-tag { font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 99px; background: var(--surface); color: var(--ink); }
   .sugg-tag.mine { background: var(--lime); }
   .sugg-ingr { font-size: 13px; color: var(--muted); line-height: 1.5; max-width: 320px; }
+
+  /* RECETTE & FRIGO */
+  .recipe-link { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 700; color: var(--accent); text-decoration: none; min-height: 36px; padding: 0 2px; }
+  .recipe-link[hidden] { display: none; }
+  .meal-row { display: flex; align-items: center; gap: 6px; border-top: 1px solid var(--line); }
+  .meal-row .meal { border-top: 0; flex: 1; min-width: 0; }
+  .meal-row .recipe-link { flex-shrink: 0; font-size: 12px; padding: 0 4px; }
+  .fridge-results { display: flex; flex-direction: column; gap: 8px; margin-top: 14px; }
+  .fr-item { background: var(--bg); border-radius: var(--r-sm); padding: 12px 14px; display: flex; flex-direction: column; gap: 6px; }
+  .fr-head { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
+  .fr-dish { font-family: var(--serif); font-size: 17px; font-weight: 700; }
+  .fr-score { font-size: 12px; font-weight: 800; color: var(--accent); white-space: nowrap; }
+  .fr-ingr { font-size: 13px; line-height: 1.5; color: var(--muted); }
+  .fr-ingr b { color: var(--accent-dark); font-weight: 700; }
+  .fr-actions { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+  .fr-go { height: 38px; padding: 0 16px; border-radius: 19px; border: 0; background: var(--accent); color: #fff; font-weight: 700; font-size: 13px; }
 
   /* IDÉES DE DÎNERS */
   .ideas { margin: 14px 16px 0; }
@@ -411,6 +428,14 @@
     <span style="flex:1;display:flex;flex-direction:column">
       <span class="v">Je sais pas quoi faire ce soir</span>
       <span class="k" id="suggestSub">Un plat au hasard parmi plus de 150</span></span>
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8C978F" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>
+  </button>
+  <button class="suggest-cta" type="button" id="fridgeBtn" style="margin-top:10px">
+    <span class="tile" style="background:#D4ECD9">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M5 10h14M9 6v1M9 13v3"/></svg></span>
+    <span style="flex:1;display:flex;flex-direction:column">
+      <span class="v">Avec ce qu'il me reste</span>
+      <span class="k">Des idées à partir de tes ingrédients</span></span>
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8C978F" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>
   </button>
   <div class="ideas" id="ideas"></div>
@@ -569,6 +594,7 @@
     <label class="sr" for="mealDish">Plat</label>
     <input class="text-field" id="mealDish" type="text" placeholder="Plat (ex : lasagnes)" list="dishList" style="margin-top:0">
     <datalist id="dishList"></datalist>
+    <a class="recipe-link" id="mealRecipe" href="#" target="_blank" rel="noopener" hidden><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5V5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2.5zM19 19v3H6"/></svg>Voir une recette</a>
     <div class="dish-chips" id="dishChips"></div>
     <label class="field-lbl" for="mealIngr">Ingrédients <span>un par ligne</span></label>
     <textarea class="text-area" id="mealIngr" rows="5" placeholder="Pâtes à lasagnes&#10;Viande hachée&#10;Sauce tomate"></textarea>
@@ -592,6 +618,19 @@
       <button class="btn-cancel" type="button" id="suggestAgain">Un autre</button>
       <button class="btn-ok" type="button" id="suggestGo">On fait ça</button>
     </div>
+  </div>
+</div>
+
+<!-- SHEET : AVEC CE QU'IL ME RESTE -->
+<div class="overlay" id="fridgeSheet">
+  <div class="sheet">
+    <div class="grab"></div>
+    <div class="sheet-title">Qu'est-ce que je fais avec…</div>
+    <label class="sr" for="fridgeInput">Tes ingrédients</label>
+    <input class="text-field" id="fridgeInput" type="text" placeholder="courgettes, œufs, fromage" autocomplete="off" enterkeyhint="search" style="margin-top:0">
+    <p class="p-muted" style="font-size:12px;margin-top:6px">Sépare les ingrédients par une virgule. Le sel, l'huile, le beurre… sont comptés comme déjà là.</p>
+    <div class="fridge-results" id="fridgeResults"></div>
+    <div class="sheet-actions"><button class="btn-cancel" type="button" data-close>Fermer</button></div>
   </div>
 </div>
 
@@ -1222,12 +1261,12 @@ function renderMenus() {
       ${SLOTS.map(sl => {
         const m = mealAt(d.key, sl.id);
         const ing = m ? splitIngr(m.ingredients) : [];
-        return `<button class="meal" type="button" ${editable ? `data-meal="${d.key}|${sl.id}"` : 'disabled'} aria-label="Dîner du ${d.name}${m ? ' : ' + esc(m.dish) : ', vide'}">
+        return `<div class="meal-row"><button class="meal" type="button" ${editable ? `data-meal="${d.key}|${sl.id}"` : 'disabled'} aria-label="Dîner du ${d.name}${m ? ' : ' + esc(m.dish) : ', vide'}">
           <span class="meal-body">${m
             ? `<span class="meal-dish">${esc(m.dish)}</span>${ing.length ? `<span class="meal-ingr">${esc(ing.join(', '))}</span>` : ''}`
             : `<span class="meal-empty">${editable ? 'Ajouter le dîner' : 'Pas encore prévu'}</span>`}</span>
-          ${editable ? `<svg class="meal-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">${m ? '<path d="m9 6 6 6-6 6"/>' : '<path d="M12 5v14M5 12h14"/>'}</svg>` : ''}
-        </button>`;
+          ${editable && !m ? `<svg class="meal-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>` : ''}
+        </button>${m ? recipeLink(m.dish) : ''}</div>`;
       }).join('')}
     </div>`).join('');
 }
@@ -1252,13 +1291,14 @@ function renderTodayMenu() {
 function openMeal(day, slot, prefill) {
   const m = mealAt(day, slot);
   const d = weekDays().find(x => x.key === day);
-  editingMeal = { day, slot, ideaId: prefill ? prefill.ideaId : null };
+  editingMeal = { day, slot, ideaId: prefill ? prefill.ideaId : null, have: prefill && prefill.have ? prefill.have : [] };
   $('mealTitle').textContent = `${d ? d.name.replace(/^./, c => c.toUpperCase()) : ''} soir`;
   $('mealDish').value = prefill ? prefill.dish : (m ? m.dish : '');
   $('mealIngr').value = prefill ? splitIngr(prefill.ingredients).join('\n') : (m ? splitIngr(m.ingredients).join('\n') : '');
   if (prefill) fillFromBook(prefill.dish);
   $('mealToList').checked = !m || !!prefill;
   $('mealDelete').hidden = !m;
+  updateMealRecipe();
   // Plats déjà faits
   const book = Object.values(local.dishBook || {}).sort((a, b) => b.used - a.used);
   $('dishList').innerHTML = book.map(b => `<option value="${esc(b.dish)}">`).join('');
@@ -1286,7 +1326,9 @@ $('mealForm').addEventListener('submit', async (ev) => {
   closeSheet('mealSheet');
   if (editingMeal.ideaId) await deleteIdea(editingMeal.ideaId, true);
   renderMenus(); renderTodayMenu();
-  if ($('mealToList').checked && ingr.length) await ingredientsToList(ingr);
+  const toBuy = ingr.filter(i => !(editingMeal.have || []).some(t => termMatches(t, i)));
+  if ($('mealToList').checked && toBuy.length) await ingredientsToList(toBuy);
+  else if ($('mealToList').checked && ingr.length) toast('Repas enregistré · tu as déjà tout');
   else toast('Repas enregistré');
 });
 async function weekToList() {
@@ -1534,6 +1576,7 @@ function rollSuggestion() {
     <div class="sugg-dish">${esc(dish.dish)}</div>
     <div class="sugg-tags">${dish.mine ? '<span class="sugg-tag mine">Déjà fait</span>' : ''}${tags.map(t => `<span class="sugg-tag">${t}</span>`).join('')}</div>
     ${ing.length ? `<div class="sugg-ingr">${esc(ing.join(' · '))}</div>` : ''}
+    ${recipeLink(dish.dish, 'Voir une recette')}
     <div class="p-muted" style="font-size:12px">${total} plat${total > 1 ? 's' : ''} possible${total > 1 ? 's' : ''}</div>`;
   $('suggestGo').textContent = IS_FAMILLE ? `Proposer à ${OWNER || 'la cheffe'}` : 'On fait ça';
   $('suggestGo').hidden = IS_FAMILLE && !ideasRemote;
@@ -1557,6 +1600,105 @@ async function acceptSuggestion() {
   renderPick();
   openSheet('pickSheet');
 }
+
+// ============================================================
+// RECETTE (Marmiton) & « AVEC CE QU'IL ME RESTE »
+// ============================================================
+const BOOK_ICON = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5V5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2.5zM19 19v3H6"/></svg>';
+function recipeUrl(dish) {
+  const q = String(dish || '').replace(/\s+et\s+(salade|riz|tartines|haricots verts)$/i, '').trim();
+  return 'https://www.marmiton.org/recettes/recherche.aspx?aqt=' + encodeURIComponent(q);
+}
+function recipeLink(dish, label = 'Recette') {
+  return `<a class="recipe-link" href="${esc(recipeUrl(dish))}" target="_blank" rel="noopener" aria-label="Voir une recette de ${esc(dish)}">${BOOK_ICON}${label}</a>`;
+}
+// Ingrédients de base qu'on a presque toujours
+const STAPLES = ['sel','poivre','huile','huile d olive','beurre','farine','sucre','ail','thym','bouillon','herbes de provence','moutarde','vinaigrette','persil','epices'];
+// Mots qui regroupent plusieurs ingrédients
+const FAMILIES = {
+  fromage: ['gruyere','emmental','comte','mozzarella','reblochon','parmesan','cheddar','chevre','raclette','beaufort','ricotta','halloumi','tomme','fromage','vache qui rit'],
+  pate: ['pate','spaghetti','tagliatelle','penne','coquillette','macaroni','lasagne','cannelloni','tortellini','raviole','gnocchi','nouille','crozet'],
+  poisson: ['cabillaud','saumon','colin','lieu','truite','dorade','sardine','morue','thon','hareng','poisson','encornet'],
+  viande: ['viande','boeuf','steak','veau','porc','poulet','dinde','agneau','canard','lapin','saucisse','merguez','jambon','lardon','chorizo'],
+  legume: ['carotte','courgette','poireau','tomate','poivron','aubergine','champignon','epinard','brocoli','chou','haricot vert','petit pois','oignon','navet','potiron','asperge','endive','fenouil','celeri'],
+  creme: ['creme fraiche','creme'],
+  patate: ['pomme de terre']
+};
+function stem(t) { return norm(t).replace(/[^a-z0-9 ]+/g, ' ').split(/\s+/).filter(Boolean).map(w => w.length > 3 ? w.replace(/(s|x)$/, '') : w).join(' '); }
+function isStaple(ing) { const s = stem(ing); return STAPLES.some(x => s === stem(x) || s.startsWith(stem(x) + ' ')); }
+function termMatches(term, ing) {
+  const t = stem(term), i = stem(ing);
+  if (!t) return false;
+  const has = (w) => (' ' + i + ' ').includes(' ' + w + ' ');
+  if (has(t)) return true;
+  const fam = FAMILIES[t];
+  return !!fam && fam.some(f => has(stem(f)));
+}
+function fridgeSearch(text) {
+  const terms = text.split(/[,;\n]+| et /).map(x => x.trim()).filter(x => stem(x).length >= 2);
+  if (!terms.length) return { terms, results: [] };
+  const results = [];
+  for (const d of suggestionPool()) {
+    const ing = splitIngr(d.ingredients);
+    if (!ing.length) continue;
+    const used = ing.filter(i => terms.some(t => termMatches(t, i)));
+    const termsHit = terms.filter(t => ing.some(i => termMatches(t, i))).length;
+    if (!termsHit) continue;
+    const missing = ing.filter(i => !used.includes(i) && !isStaple(i));
+    results.push({ d, used, missing, termsHit, score: termsHit * 10 - missing.length + (d.mine ? 0.5 : 0) });
+  }
+  results.sort((a, b) => b.score - a.score || a.missing.length - b.missing.length);
+  return { terms, results: results.slice(0, 15) };
+}
+let fridgeLast = [];
+let fridgeTerms = [];
+function renderFridge() {
+  const { terms, results } = fridgeSearch($('fridgeInput').value);
+  fridgeLast = results; fridgeTerms = terms;
+  const el = $('fridgeResults');
+  if (!terms.length) { el.innerHTML = ''; return; }
+  if (!results.length) { el.innerHTML = `<div class="empty" style="margin-top:0">Aucun plat trouvé avec ça.<br>Essaie un mot plus simple (ex : « fromage », « pâtes »).</div>`; return; }
+  el.innerHTML = results.map((r, idx) => {
+    const ing = splitIngr(r.d.ingredients).filter(i => r.used.includes(i) || !isStaple(i));
+    const list = ing.map(i => r.used.includes(i) ? `<b>${esc(i)}</b>` : esc(i)).join(' · ');
+    const miss = r.missing.length;
+    return `<div class="fr-item">
+      <div class="fr-head"><span class="fr-dish">${esc(r.d.dish)}</span>
+        <span class="fr-score">${miss === 0 ? 'Tout est là' : `il manque ${miss}`}</span></div>
+      <div class="fr-ingr">${list}</div>
+      <div class="fr-actions">${recipeLink(r.d.dish)}
+        ${IS_FAMILLE && !ideasRemote ? '' : `<button class="fr-go" type="button" data-fridge="${idx}">${IS_FAMILLE ? 'Proposer' : 'On fait ça'}</button>`}</div>
+    </div>`;
+  }).join('');
+}
+function openFridge() {
+  openSheet('fridgeSheet');
+  renderFridge();
+  setTimeout(() => $('fridgeInput').focus(), 250);
+}
+let fridgeTimer;
+$('fridgeInput').addEventListener('input', () => { clearTimeout(fridgeTimer); fridgeTimer = setTimeout(renderFridge, 150); });
+async function acceptFridge(idx) {
+  const r = fridgeLast[idx]; if (!r) return;
+  closeSheet('fridgeSheet');
+  if (IS_FAMILLE) {
+    if (!local.familyName) { pendingIdea = r.d.dish; openNameSheet(); return; }
+    await addIdea(r.d.dish); return;
+  }
+  // Les ingrédients qu'elle a déjà ne partiront pas dans la liste de courses
+  pickIdea = { dish: r.d.dish, ingredients: r.d.ingredients, id: null, have: [...fridgeTerms] };
+  pickOffset = weekOffset;
+  $('pickTitle').textContent = `Quel soir pour « ${r.d.dish} » ?`;
+  renderPick();
+  openSheet('pickSheet');
+}
+function updateMealRecipe() {
+  const d = $('mealDish').value.trim();
+  const a = $('mealRecipe');
+  a.hidden = !d;
+  if (d) a.href = recipeUrl(d);
+}
+$('mealDish').addEventListener('input', updateMealRecipe);
 
 // ============================================================
 // IDÉES DE DÎNERS (proposées par la famille, choisies par la propriétaire)
@@ -1661,7 +1803,7 @@ async function choosePickDay(dayKey) {
   const idea = pickIdea;
   // Afficher la bonne semaine puis ouvrir le repas pré-rempli
   if (weekOffset !== pickOffset) { weekOffset = pickOffset; await loadMenus(); renderMenus(); }
-  openMeal(dayKey, 'soir', { dish: idea.dish, ingredients: idea.ingredients || '', ideaId: idea.id || null });
+  openMeal(dayKey, 'soir', { dish: idea.dish, ingredients: idea.ingredients || '', ideaId: idea.id || null, have: idea.have || [] });
 }
 
 async function changeWeek(delta) {
@@ -1759,6 +1901,8 @@ document.addEventListener('click', (ev) => {
   if (t.dataset.plan) return openPick(t.dataset.plan);
   if (t.id === 'suggestBtn' || t.dataset.suggest !== undefined) return openSuggest();
   if (t.id === 'suggestAgain') return rollSuggestion();
+  if (t.id === 'fridgeBtn') return openFridge();
+  if (t.dataset.fridge !== undefined) return acceptFridge(Number(t.dataset.fridge));
   if (t.id === 'suggestGo') return acceptSuggestion();
   if (t.dataset.sfilter) {
     const f = t.dataset.sfilter;
@@ -1862,6 +2006,7 @@ async function init() {
     $('welcome').hidden = false;
     $('welcomeTxt').textContent = `Ajoute ce qui manque, ${OWNER || 'la personne qui fait les courses'} le verra tout de suite. Tu peux cocher ce qui est déjà pris et retirer ce que tu as ajouté.`;
     $('famSeg').hidden = false;
+    $('fridgeBtn').hidden = true; // « Avec ce qu'il me reste » réservé à la propriétaire
     showTab('list');
     if (!local.familyName) setTimeout(openNameSheet, 400);
   } else {
