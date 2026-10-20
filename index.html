@@ -202,6 +202,76 @@
   .btn-ok { background: var(--accent); color: #fff; }
   .share-url { font-size: 13px; color: var(--muted); word-break: break-all; background: var(--bg); padding: 14px; border-radius: var(--r-sm); text-align: center; }
 
+  /* BOUTON ROND */
+  .round-btn { width: 44px; height: 44px; border-radius: 22px; border: 0; background: var(--surface); display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .round-btn:active { background: var(--soft); }
+
+  /* MENUS */
+  .week-nav { display: flex; gap: 8px; }
+  .menu-note { margin: 10px 16px 0; background: var(--warn-bg); color: var(--warn); border-radius: var(--r-sm); padding: 12px 14px; font-size: 13px; line-height: 1.45; }
+  .menu-actions { margin: 12px 16px 0; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .days { margin: 14px 16px 0; display: flex; flex-direction: column; gap: 10px; }
+  .day { background: var(--surface); border-radius: var(--r-md); padding: 12px 14px 4px; }
+  .day.today { box-shadow: inset 0 0 0 2px var(--accent); }
+  .day-head { display: flex; justify-content: space-between; align-items: baseline; padding-bottom: 4px; }
+  .day-name { font-family: var(--serif); font-size: 17px; font-weight: 700; text-transform: capitalize; }
+  .day-date { font-size: 12px; color: var(--muted); }
+  .day-date.now { color: var(--accent); font-weight: 700; }
+  .meal { width: 100%; display: flex; align-items: center; gap: 12px; min-height: 52px; border: 0; border-top: 1px solid var(--line); background: none; text-align: left; padding: 6px 0; }
+  .meal:disabled { cursor: default; }
+  .meal-slot { width: 42px; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); flex-shrink: 0; }
+  .meal-body { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+  .meal-dish { font-size: 15px; font-weight: 600; overflow-wrap: anywhere; }
+  .meal-ingr { font-size: 12px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .meal-empty { font-size: 14px; color: #8C978F; }
+  .meal-chev { color: #8C978F; flex-shrink: 0; }
+  .today-menu { margin: 12px 16px 0; width: calc(100% - 32px); border: 0; background: var(--surface); border-radius: var(--r-md); padding: 14px 16px; display: flex; align-items: center; gap: 12px; text-align: left; }
+  .today-menu .k { font-size: 12px; color: var(--muted); }
+  .today-menu .v { font-family: var(--serif); font-size: 17px; font-weight: 700; }
+  .field-lbl { display: block; font-size: 13px; font-weight: 700; margin: 14px 0 6px; }
+  .field-lbl span { font-weight: 500; color: var(--muted); }
+  .text-area { width: 100%; border: 1.5px solid var(--soft); border-radius: var(--r-sm); background: var(--bg); padding: 12px 16px; font: 500 15px/1.5 var(--sans); color: var(--ink); outline: none; resize: vertical; }
+  .text-area:focus { border-color: var(--accent); }
+  .check-row { display: flex; align-items: center; gap: 10px; margin-top: 14px; font-size: 14px; font-weight: 600; min-height: 44px; }
+  .check-row input { width: 22px; height: 22px; accent-color: var(--accent); }
+  .dish-chips { display: flex; gap: 8px; overflow-x: auto; margin-top: 10px; padding-bottom: 2px; scrollbar-width: none; }
+  .dish-chips::-webkit-scrollbar { display: none; }
+  .dish-chips .chip { flex-shrink: 0; }
+  .fam-seg { margin: calc(14px + env(safe-area-inset-top)) 16px 0; height: 48px; background: var(--surface); border-radius: 24px; padding: 4px; display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
+  .fam-seg[hidden] { display: none; }
+  .fam-seg button { border: 0; border-radius: 20px; background: transparent; font-weight: 700; font-size: 14px; color: var(--muted); }
+  .fam-seg button.on { background: var(--ink); color: #fff; }
+  body.famille .top { padding-top: 14px; }
+  body.famille.on-menus .add-bar { display: none; }
+
+  /* IDÉES DE DÎNERS */
+  .ideas { margin: 14px 16px 0; }
+  .ideas:empty { display: none; }
+  .ideas-card { background: #FFF8EC; border: 1.5px solid #F1DFC0; border-radius: var(--r-md); padding: 14px 16px 6px; }
+  .ideas-head { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
+  .ideas-title { font-family: var(--serif); font-size: 17px; font-weight: 700; }
+  .ideas-sub { font-size: 12px; color: var(--muted); }
+  .idea-form { display: flex; gap: 8px; margin-top: 10px; }
+  .idea-form input { flex: 1; min-width: 0; height: 46px; border: 1.5px solid #F1DFC0; border-radius: 23px; background: var(--surface); padding: 0 16px; font: 500 15px var(--sans); color: var(--ink); outline: none; }
+  .idea-form input:focus { border-color: var(--accent); }
+  .idea { display: flex; align-items: center; gap: 10px; min-height: 52px; border-top: 1px solid #F1DFC0; padding: 4px 0; }
+  .idea:first-of-type { margin-top: 8px; }
+  .idea-body { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+  .idea-dish { font-size: 15px; font-weight: 600; overflow-wrap: anywhere; }
+  .idea-by { font-size: 12px; color: var(--muted); }
+  .idea-plan { height: 38px; padding: 0 14px; border-radius: 19px; border: 0; background: var(--accent); color: #fff; font-weight: 700; font-size: 13px; flex-shrink: 0; }
+  .ideas-empty { font-size: 13px; color: var(--muted); padding: 10px 0 8px; }
+  .nav-btn .dot-badge { position: absolute; top: 16px; left: calc(50% + 7px); width: 9px; height: 9px; border-radius: 50%; background: #F0B35A; display: none; }
+  .nav-btn .dot-badge.on { display: block; }
+  .pick-week { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 10px; }
+  .pick-week .round-btn { background: var(--bg); }
+  .pick-days { display: flex; flex-direction: column; gap: 6px; }
+  .pick-day { min-height: 52px; border: 1.5px solid var(--soft); border-radius: var(--r-sm); background: var(--surface); display: flex; align-items: center; gap: 12px; padding: 6px 14px; text-align: left; }
+  .pick-day:active { background: var(--bg); }
+  .pick-day .n { width: 86px; font-weight: 700; text-transform: capitalize; flex-shrink: 0; }
+  .pick-day .w { flex: 1; font-size: 13px; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .pick-day .w.free { color: var(--accent); font-weight: 600; }
+
   /* MODE FAMILLE */
   body.famille .nav-wrap { display: none; }
   body.famille { padding-bottom: calc(100px + env(safe-area-inset-bottom)); }
@@ -230,6 +300,12 @@
 
 <div class="wrap">
 
+<!-- Onglets du mode famille -->
+<div class="fam-seg" id="famSeg" role="tablist" hidden>
+  <button type="button" role="tab" data-tab="list" class="on">Liste</button>
+  <button type="button" role="tab" data-tab="menus">Dîners</button>
+</div>
+
 <!-- ============ ACCUEIL ============ -->
 <section class="tab active" id="tab-home">
   <header class="top">
@@ -237,10 +313,17 @@
       <div class="top-sub" id="hello">Bonjour</div>
       <h1 class="top-title" id="monthTitle">—</h1>
     </div>
-    <span class="sync"><span class="sync-dot" id="syncDot"></span><span id="syncTxt">en ligne</span></span>
+    <div style="display:flex;align-items:center;gap:8px">
+      <span class="sync"><span class="sync-dot" id="syncDot"></span><span id="syncTxt">en ligne</span></span>
+      <button class="round-btn" type="button" data-goto="settings" aria-label="Réglages">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg>
+      </button>
+    </div>
   </header>
 
   <div class="hero" id="hero"></div>
+
+  <button class="today-menu" type="button" data-goto="menus" id="todayMenu" hidden></button>
 
   <div class="section">
     <div class="h2">Ajout rapide</div>
@@ -289,6 +372,29 @@
 </section>
 
 <!-- ============ BILAN ============ -->
+<!-- ============ MENUS ============ -->
+<section class="tab" id="tab-menus">
+  <header class="top">
+    <div>
+      <div class="top-sub" id="weekLabel">—</div>
+      <h1 class="top-title">Dîners</h1>
+    </div>
+    <div class="week-nav">
+      <button class="round-btn" type="button" id="weekPrev" aria-label="Semaine précédente">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m15 6-6 6 6 6"/></svg></button>
+      <button class="round-btn" type="button" id="weekNext" aria-label="Semaine suivante">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg></button>
+    </div>
+  </header>
+  <div class="menu-note" id="menuNote" hidden></div>
+  <div class="menu-actions" id="menuActions">
+    <button class="pill-btn" type="button" id="weekToList">Tout ajouter à la liste</button>
+    <button class="link-btn" type="button" id="weekToday">Cette semaine</button>
+  </div>
+  <div class="ideas" id="ideas"></div>
+  <div class="days" id="days"></div>
+</section>
+
 <section class="tab" id="tab-bilan">
   <header class="top">
     <div>
@@ -376,11 +482,12 @@
     <div class="nav-fab"><button class="fab" id="fab" aria-label="Ajouter une dépense" type="button">
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
     </button></div>
+    <button class="nav-btn" data-tab="menus" aria-label="Menus de la semaine" type="button">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 3v8M5 3v4a2 2 0 0 0 4 0V3M7 11v10M17 21V3c-2 1.5-3 4-3 7v3h3"/></svg>
+      <span class="dot-badge" id="ideasBadge"></span>
+    </button>
     <button class="nav-btn" data-tab="bilan" aria-label="Bilan" type="button">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M5 20V11M12 20V5M19 20v-6"/></svg>
-    </button>
-    <button class="nav-btn" data-tab="settings" aria-label="Réglages" type="button">
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg>
     </button>
   </nav>
 </div>
@@ -429,6 +536,43 @@
       <button class="btn-cancel" type="button" data-close>Annuler</button>
       <button class="btn-ok" type="button" id="confirmReset">Confirmer</button>
     </div>
+  </div>
+</div>
+
+<!-- SHEET : REPAS -->
+<div class="overlay" id="mealSheet">
+  <form class="sheet" id="mealForm" autocomplete="off">
+    <div class="grab"></div>
+    <div class="sheet-title" id="mealTitle">Repas</div>
+    <label class="sr" for="mealDish">Plat</label>
+    <input class="text-field" id="mealDish" type="text" placeholder="Plat (ex : lasagnes)" list="dishList" style="margin-top:0">
+    <datalist id="dishList"></datalist>
+    <div class="dish-chips" id="dishChips"></div>
+    <label class="field-lbl" for="mealIngr">Ingrédients <span>un par ligne</span></label>
+    <textarea class="text-area" id="mealIngr" rows="5" placeholder="Pâtes à lasagnes&#10;Viande hachée&#10;Sauce tomate"></textarea>
+    <label class="check-row"><input type="checkbox" id="mealToList" checked> Ajouter les ingrédients à la liste de courses</label>
+    <div class="sheet-actions">
+      <button class="btn-cancel" type="button" id="mealDelete" hidden style="color:var(--danger)">Effacer</button>
+      <button class="btn-cancel" type="button" data-close>Annuler</button>
+      <button class="btn-ok" type="submit">Enregistrer</button>
+    </div>
+  </form>
+</div>
+
+<!-- SHEET : CHOISIR UN JOUR POUR UNE IDÉE -->
+<div class="overlay" id="pickSheet">
+  <div class="sheet">
+    <div class="grab"></div>
+    <div class="sheet-title" id="pickTitle">Quel soir ?</div>
+    <div class="pick-week">
+      <button class="round-btn" type="button" id="pickPrev" aria-label="Semaine précédente">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m15 6-6 6 6 6"/></svg></button>
+      <span id="pickWeekLbl" class="p-muted"></span>
+      <button class="round-btn" type="button" id="pickNext" aria-label="Semaine suivante">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg></button>
+    </div>
+    <div class="pick-days" id="pickDays"></div>
+    <div class="sheet-actions"><button class="btn-cancel" type="button" data-close>Annuler</button></div>
   </div>
 </div>
 
@@ -506,7 +650,8 @@ let realtimeSub = null;
 let showAll = false;
 let showBasket = false;
 let selectedCat = 'Courses';
-let pendingItem = null; // article tapé avant d'avoir donné son prénom (mode famille)
+let pendingItem = null;
+let pendingIdea = null;   // idée tapée avant d'avoir donné son prénom // article tapé avant d'avoir donné son prénom (mode famille)
 
 const $ = (id) => document.getElementById(id);
 const listCode = () => IS_FAMILLE ? FAMILLE_CODE : local.listCode;
@@ -670,7 +815,7 @@ function weekTotal() {
 // ============================================================
 function renderAll() {
   if (IS_FAMILLE) { renderList(); return; }
-  renderHome(); renderList(); renderBilan(); renderSettings();
+  renderHome(); renderList(); renderBilan(); renderSettings(); renderMenus(); renderTodayMenu();
 }
 
 function renderHome() {
@@ -925,13 +1070,313 @@ function renderSettings() {
 }
 
 // ============================================================
+// MENUS DE LA SEMAINE
+// Table Supabase `weekly_menus` (partagée avec la famille).
+// Si elle n'existe pas encore, les menus restent sur ce téléphone.
+// ============================================================
+const DAYS = ['lundi','mardi','mercredi','jeudi','vendredi','samedi','dimanche'];
+const SLOTS = [{ id: 'soir', label: 'Soir' }]; // uniquement le repas du soir
+let menus = [];              // repas de la semaine affichée
+let menuRemote = true;       // false si la table n'existe pas
+let menuSub = null;
+let weekOffset = 0;          // 0 = semaine en cours
+let editingMeal = null;      // { day, slot }
+let thisWeekMenus = [];      // repas de la semaine en cours (carte d'accueil)
+
+function ymd(d) { return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; }
+function weekStart(offset = weekOffset) {
+  const d = new Date(); d.setHours(0, 0, 0, 0);
+  d.setDate(d.getDate() - ((d.getDay() + 6) % 7) + offset * 7);
+  return d;
+}
+function weekDays() {
+  const s = weekStart();
+  return DAYS.map((name, i) => { const d = new Date(s); d.setDate(s.getDate() + i); return { name, date: d, key: ymd(d) }; });
+}
+function splitIngr(t) { return String(t || '').split(/\n|,|;/).map(x => x.trim()).filter(Boolean); }
+function mealAt(day, slot) { return menus.find(m => m.day === day && m.slot === slot); }
+
+function localMenus() { try { return JSON.parse(localStorage.getItem('budgetCourses_menus') || '[]'); } catch (e) { return []; } }
+function saveLocalMenus(all) { try { localStorage.setItem('budgetCourses_menus', JSON.stringify(all)); } catch (e) {} }
+
+async function loadMenus() {
+  const days = weekDays();
+  const from = days[0].key, to = days[6].key;
+  if (menuRemote) {
+    const { data, error } = await sb.from('weekly_menus').select('*').eq('list_code', listCode()).gte('day', from).lte('day', to);
+    if (!error) { menus = data || []; if (weekOffset === 0) thisWeekMenus = menus; return; }
+    // Table absente → mode local
+    if (/weekly_menus|does not exist|schema cache|42P01|PGRST205/i.test((error.code || '') + ' ' + (error.message || ''))) {
+      menuRemote = false;
+    } else { toast('Menus : erreur réseau'); return; }
+  }
+  menus = localMenus().filter(m => m.day >= from && m.day <= to);
+  if (weekOffset === 0) thisWeekMenus = menus;
+}
+function subscribeMenus() {
+  if (!menuRemote) return;
+  const code = listCode();
+  if (menuSub) menuSub.unsubscribe();
+  menuSub = sb.channel('menus-' + code)
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'weekly_menus', filter: `list_code=eq.${code}` },
+      async () => { await loadMenus(); renderMenus(); renderTodayMenu(); })
+    .subscribe();
+}
+
+async function saveMeal(day, slot, dish, ingredients) {
+  const row = { list_code: listCode(), day, slot, dish, ingredients };
+  if (menuRemote) {
+    const { error } = await sb.from('weekly_menus').upsert(row, { onConflict: 'list_code,day,slot' });
+    if (error) { toast('Erreur réseau'); return false; }
+  } else {
+    const all = localMenus().filter(m => !(m.day === day && m.slot === slot));
+    all.push({ id: uid(), ...row }); saveLocalMenus(all);
+  }
+  // Mémoriser le plat pour le réutiliser
+  local.dishBook = local.dishBook || {};
+  local.dishBook[norm(dish)] = { dish, ingredients, used: Date.now() };
+  saveLocal();
+  await loadMenus();
+  return true;
+}
+async function deleteMeal(day, slot) {
+  if (menuRemote) {
+    const { error } = await sb.from('weekly_menus').delete().eq('list_code', listCode()).eq('day', day).eq('slot', slot);
+    if (error) { toast('Erreur réseau'); return; }
+  } else saveLocalMenus(localMenus().filter(m => !(m.day === day && m.slot === slot)));
+  await loadMenus();
+}
+
+// Ajoute des ingrédients à la liste de courses, sans doublon
+async function ingredientsToList(list) {
+  const pending = new Set(shoppingItems.filter(i => !i.checked).map(i => norm(i.name)));
+  const fresh = [];
+  for (const name of list) { const k = norm(name); if (!pending.has(k)) { pending.add(k); fresh.push(name); } }
+  const skipped = list.length - fresh.length;
+  if (fresh.length === 0) { toast(list.length ? 'Tout est déjà dans la liste' : 'Aucun ingrédient'); return; }
+  const who = IS_FAMILLE ? (local.familyName || 'Famille') : (local.userName || 'Maman');
+  const { error } = await sb.from('shopping_lists').insert(fresh.map(name => ({ list_code: listCode(), name, price: 0, checked: false, added_by: who })));
+  if (error) { toast('Erreur réseau'); return; }
+  await refreshList();
+  toast(`${fresh.length} ajouté${fresh.length > 1 ? 's' : ''} à la liste${skipped ? ` · ${skipped} déjà dedans` : ''}`);
+}
+
+function renderMenus() {
+  const days = weekDays();
+  const s = days[0].date, e = days[6].date;
+  const sameMonth = s.getMonth() === e.getMonth();
+  $('weekLabel').textContent = weekOffset === 0 ? `Cette semaine · ${s.getDate()}${sameMonth ? '' : ' ' + MONTHS_S[s.getMonth()].toLowerCase()} – ${e.getDate()} ${MONTHS_S[e.getMonth()].toLowerCase()}`
+    : `Semaine du ${s.getDate()} ${MONTHS_S[s.getMonth()].toLowerCase()} au ${e.getDate()} ${MONTHS_S[e.getMonth()].toLowerCase()}`;
+  $('weekToday').hidden = weekOffset === 0;
+  $('weekToList').hidden = IS_FAMILLE || !menus.some(m => splitIngr(m.ingredients).length);
+
+  const note = $('menuNote');
+  note.hidden = menuRemote || IS_FAMILLE;
+  note.textContent = 'Les menus sont pour l\'instant enregistrés sur ce téléphone seulement. Pour les partager avec la famille, il faut créer la table « weekly_menus » dans Supabase.';
+  if (IS_FAMILLE && !menuRemote) {
+    $('days').innerHTML = `<div class="empty" style="margin-top:0">Les menus ne sont pas encore partagés.</div>`; return;
+  }
+
+  const today = ymd(new Date());
+  const editable = !IS_FAMILLE;
+  $('days').innerHTML = days.map(d => `
+    <div class="day ${d.key === today ? 'today' : ''}">
+      <div class="day-head"><span class="day-name">${d.name}</span>
+        <span class="day-date ${d.key === today ? 'now' : ''}">${d.key === today ? "Aujourd'hui" : d.date.getDate() + ' ' + MONTHS_S[d.date.getMonth()].toLowerCase()}</span></div>
+      ${SLOTS.map(sl => {
+        const m = mealAt(d.key, sl.id);
+        const ing = m ? splitIngr(m.ingredients) : [];
+        return `<button class="meal" type="button" ${editable ? `data-meal="${d.key}|${sl.id}"` : 'disabled'} aria-label="Dîner du ${d.name}${m ? ' : ' + esc(m.dish) : ', vide'}">
+          <span class="meal-body">${m
+            ? `<span class="meal-dish">${esc(m.dish)}</span>${ing.length ? `<span class="meal-ingr">${esc(ing.join(', '))}</span>` : ''}`
+            : `<span class="meal-empty">${editable ? 'Ajouter le dîner' : 'Pas encore prévu'}</span>`}</span>
+          ${editable ? `<svg class="meal-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">${m ? '<path d="m9 6 6 6-6 6"/>' : '<path d="M12 5v14M5 12h14"/>'}</svg>` : ''}
+        </button>`;
+      }).join('')}
+    </div>`).join('');
+}
+
+// Carte « Ce soir » sur l'accueil
+function renderTodayMenu() {
+  const el = $('todayMenu'); if (!el || IS_FAMILLE) return;
+  const today = ymd(new Date());
+  const list = thisWeekMenus;
+  const m = list.find(x => x.day === today && x.slot === 'soir');
+  el.hidden = false;
+  el.innerHTML = `<span class="tile" style="background:var(--lime)">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 3v8M5 3v4a2 2 0 0 0 4 0V3M7 11v10M17 21V3c-2 1.5-3 4-3 7v3h3"/></svg></span>
+    <span style="flex:1;display:flex;flex-direction:column">
+      <span class="k">${m ? 'Ce soir' : 'Menus de la semaine'}</span>
+      <span class="v">${m ? esc(m.dish) : 'Planifier les dîners'}</span></span>
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8C978F" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>`;
+}
+
+function openMeal(day, slot, prefill) {
+  const m = mealAt(day, slot);
+  const d = weekDays().find(x => x.key === day);
+  editingMeal = { day, slot, ideaId: prefill ? prefill.ideaId : null };
+  $('mealTitle').textContent = `${d ? d.name.replace(/^./, c => c.toUpperCase()) : ''} soir`;
+  $('mealDish').value = prefill ? prefill.dish : (m ? m.dish : '');
+  $('mealIngr').value = prefill ? '' : (m ? splitIngr(m.ingredients).join('\n') : '');
+  if (prefill) fillFromBook(prefill.dish);
+  $('mealToList').checked = !m || !!prefill;
+  $('mealDelete').hidden = !m;
+  // Plats déjà faits
+  const book = Object.values(local.dishBook || {}).sort((a, b) => b.used - a.used);
+  $('dishList').innerHTML = book.map(b => `<option value="${esc(b.dish)}">`).join('');
+  $('dishChips').innerHTML = book.slice(0, 10).map(b => `<button type="button" class="chip" data-dish="${esc(b.dish)}">${esc(b.dish)}</button>`).join('');
+  openSheet('mealSheet');
+  if (prefill) setTimeout(() => $('mealIngr').focus(), 250);
+  else if (!m) setTimeout(() => $('mealDish').focus(), 250);
+}
+function fillFromBook(dish) {
+  const b = (local.dishBook || {})[norm(dish)];
+  if (!b) return false;
+  $('mealDish').value = b.dish;
+  if (!$('mealIngr').value.trim()) $('mealIngr').value = splitIngr(b.ingredients).join('\n');
+  return true;
+}
+$('mealDish').addEventListener('change', () => fillFromBook($('mealDish').value));
+$('mealForm').addEventListener('submit', async (ev) => {
+  ev.preventDefault();
+  if (!editingMeal) return;
+  const dish = $('mealDish').value.trim();
+  if (!dish) { toast('Écris le nom du plat'); $('mealDish').focus(); return; }
+  const ingr = splitIngr($('mealIngr').value);
+  const ok = await saveMeal(editingMeal.day, editingMeal.slot, dish, ingr.join('\n'));
+  if (!ok) return;
+  closeSheet('mealSheet');
+  if (editingMeal.ideaId) await deleteIdea(editingMeal.ideaId, true);
+  renderMenus(); renderTodayMenu();
+  if ($('mealToList').checked && ingr.length) await ingredientsToList(ingr);
+  else toast('Repas enregistré');
+});
+async function weekToList() {
+  const all = menus.flatMap(m => splitIngr(m.ingredients));
+  await ingredientsToList(all);
+}
+// ============================================================
+// IDÉES DE DÎNERS (proposées par la famille, choisies par la propriétaire)
+// Table Supabase `menu_ideas`.
+// ============================================================
+let ideas = [];
+let ideasRemote = true;
+let ideasSub = null;
+let pickIdea = null;      // idée en cours de planification
+let pickOffset = 0;
+
+async function loadIdeas() {
+  if (!ideasRemote) return;
+  const { data, error } = await sb.from('menu_ideas').select('*').eq('list_code', listCode()).order('created_at', { ascending: true });
+  if (!error) { ideas = data || []; return; }
+  if (/menu_ideas|does not exist|schema cache|42P01|PGRST205/i.test((error.code || '') + ' ' + (error.message || ''))) ideasRemote = false;
+}
+function subscribeIdeas() {
+  if (!ideasRemote) return;
+  const code = listCode();
+  if (ideasSub) ideasSub.unsubscribe();
+  ideasSub = sb.channel('ideas-' + code)
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'menu_ideas', filter: `list_code=eq.${code}` },
+      async () => { await loadIdeas(); renderIdeas(); })
+    .subscribe();
+}
+async function addIdea(dish) {
+  const by = IS_FAMILLE ? local.familyName : (local.userName || 'Maman');
+  if (ideas.some(i => norm(i.dish) === norm(dish))) { toast('Déjà proposé'); return true; }
+  const { error } = await sb.from('menu_ideas').insert({ list_code: listCode(), dish, proposed_by: by });
+  if (error) { toast('Erreur : proposition non envoyée'); return false; }
+  await loadIdeas(); renderIdeas();
+  toast(IS_FAMILLE ? `Proposé à ${OWNER || 'la famille'}` : 'Idée ajoutée');
+  return true;
+}
+async function deleteIdea(id, silent) {
+  ideas = ideas.filter(i => String(i.id) !== String(id)); renderIdeas();
+  const { error } = await sb.from('menu_ideas').delete().eq('id', id);
+  if (error) toast('Erreur réseau');
+  await loadIdeas(); renderIdeas();
+  if (!silent) toast('Idée retirée');
+}
+function canDeleteIdea(i) {
+  if (!IS_FAMILLE) return true;
+  return !!local.familyName && norm(i.proposed_by) === norm(local.familyName);
+}
+function renderIdeas() {
+  const el = $('ideas');
+  const badge = $('ideasBadge');
+  if (badge) badge.classList.toggle('on', !IS_FAMILLE && ideas.length > 0);
+  if (!ideasRemote) { el.innerHTML = ''; return; }
+  // Côté propriétaire : la carte n'apparaît que s'il y a des propositions
+  if (!IS_FAMILLE && ideas.length === 0) { el.innerHTML = ''; return; }
+  const x = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>';
+  const rows = ideas.map(i => `<div class="idea">
+      <span class="avatar av-26" style="background:${hashTint(i.proposed_by || '?')}">${esc(initials(i.proposed_by || '?').slice(0, 1))}</span>
+      <span class="idea-body"><span class="idea-dish">${esc(i.dish)}</span><span class="idea-by">proposé par ${esc(i.proposed_by || 'quelqu\'un')}</span></span>
+      ${IS_FAMILLE ? '' : `<button class="idea-plan" type="button" data-plan="${esc(i.id)}">Planifier</button>`}
+      ${canDeleteIdea(i) ? `<button class="icon-btn" type="button" data-del-idea="${esc(i.id)}" aria-label="Retirer ${esc(i.dish)}">${x}</button>` : ''}
+    </div>`).join('');
+  el.innerHTML = `<div class="ideas-card">
+    <div class="ideas-head">
+      <span class="ideas-title">Idées de dîners</span>
+      <span class="ideas-sub">${IS_FAMILLE ? `${esc(OWNER || 'La cheffe')} choisit` : `${ideas.length} proposition${ideas.length > 1 ? 's' : ''}`}</span>
+    </div>
+    ${IS_FAMILLE ? `<form class="idea-form" id="ideaForm" autocomplete="off">
+      <label class="sr" for="ideaInput">Proposer un dîner</label>
+      <input id="ideaInput" type="text" placeholder="Une envie ? Ex : raclette" enterkeyhint="send" maxlength="60">
+      <button class="pill-btn" type="submit">Proposer</button></form>` : ''}
+    ${rows || `<div class="ideas-empty">Aucune proposition pour l'instant.</div>`}
+  </div>`;
+}
+
+// Planifier une idée : choisir le soir, puis compléter le repas
+function openPick(id) {
+  pickIdea = ideas.find(i => String(i.id) === String(id));
+  if (!pickIdea) return;
+  pickOffset = weekOffset;
+  $('pickTitle').textContent = `Quel soir pour « ${pickIdea.dish} » ?`;
+  renderPick();
+  openSheet('pickSheet');
+}
+async function renderPick() {
+  const s = weekStart(pickOffset);
+  const days = DAYS.map((name, i) => { const d = new Date(s); d.setDate(s.getDate() + i); return { name, date: d, key: ymd(d) }; });
+  $('pickWeekLbl').textContent = pickOffset === 0 ? 'Cette semaine' : pickOffset === 1 ? 'Semaine prochaine' : `Semaine du ${s.getDate()} ${MONTHS_S[s.getMonth()].toLowerCase()}`;
+  let wk = [];
+  if (menuRemote) {
+    const { data } = await sb.from('weekly_menus').select('*').eq('list_code', listCode()).gte('day', days[0].key).lte('day', days[6].key);
+    wk = data || [];
+  } else wk = localMenus().filter(m => m.day >= days[0].key && m.day <= days[6].key);
+  const today = ymd(new Date());
+  $('pickDays').innerHTML = days.filter(d => d.key >= today).map(d => {
+    const m = wk.find(x => x.day === d.key && x.slot === 'soir');
+    return `<button class="pick-day" type="button" data-pick="${d.key}">
+      <span class="n">${d.name}</span><span class="w ${m ? '' : 'free'}">${m ? 'remplace : ' + esc(m.dish) : 'libre'}</span>
+      <span class="p-muted">${d.date.getDate()} ${MONTHS_S[d.date.getMonth()].toLowerCase()}</span></button>`;
+  }).join('') || `<p class="p-muted">Cette semaine est passée.</p>`;
+}
+async function choosePickDay(dayKey) {
+  closeSheet('pickSheet');
+  const idea = pickIdea;
+  // Afficher la bonne semaine puis ouvrir le repas pré-rempli
+  if (weekOffset !== pickOffset) { weekOffset = pickOffset; await loadMenus(); renderMenus(); }
+  openMeal(dayKey, 'soir', { dish: idea.dish, ideaId: idea.id });
+}
+
+async function changeWeek(delta) {
+  weekOffset = delta === 0 ? 0 : weekOffset + delta;
+  await loadMenus(); renderMenus();
+}
+
+// ============================================================
 // NAVIGATION & FEUILLES
 // ============================================================
 function showTab(name) {
   document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.id === 'tab-' + name));
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === name));
+  document.querySelectorAll('#famSeg button').forEach(b => { b.classList.toggle('on', b.dataset.tab === name); b.setAttribute('aria-selected', b.dataset.tab === name); });
+  document.body.className = document.body.className.replace(/\bon-\w+/g, '').trim() + ' on-' + name;
   window.scrollTo(0, 0);
   if (name === 'bilan') renderBilan();
+  if (name === 'menus') renderMenus();
 }
 function openSheet(id) { $(id).classList.add('open'); }
 function closeSheet(id) { $(id).classList.remove('open'); }
@@ -995,10 +1440,36 @@ document.addEventListener('click', (ev) => {
   if (t.id === 'basketClear') return clearChecked();
   if (t.id === 'inviteBtn' || t.id === 'shareBtn2') return shareList();
   if (t.id === 'meBtn') return openNameSheet();
+  if (t.dataset.meal) { const [d, s] = t.dataset.meal.split('|'); return openMeal(d, s); }
+  if (t.dataset.dish) { fillFromBook(t.dataset.dish); return; }
+  if (t.id === 'mealDelete') {
+    if (!editingMeal) return;
+    const { day, slot } = editingMeal;
+    closeSheet('mealSheet');
+    return deleteMeal(day, slot).then(() => { renderMenus(); renderTodayMenu(); toast('Repas effacé'); });
+  }
+  if (t.id === 'weekPrev') return changeWeek(-1);
+  if (t.id === 'weekNext') return changeWeek(1);
+  if (t.id === 'weekToday') return changeWeek(0);
+  if (t.id === 'weekToList') return weekToList();
+  if (t.dataset.plan) return openPick(t.dataset.plan);
+  if (t.dataset.delIdea) return deleteIdea(t.dataset.delIdea);
+  if (t.dataset.pick) return choosePickDay(t.dataset.pick);
+  if (t.id === 'pickPrev') { pickOffset = Math.max(0, pickOffset - 1); return renderPick(); }
+  if (t.id === 'pickNext') { pickOffset += 1; return renderPick(); }
   if (t.id === 'copyShare') return copyShare();
   if (t.id === 'resetBtn') return openSheet('resetSheet');
   if (t.id === 'confirmReset') return doReset();
   if (t.id === 'saveSettings') return saveSettings();
+});
+document.addEventListener('submit', async (ev) => {
+  if (ev.target.id !== 'ideaForm') return;
+  ev.preventDefault();
+  const inp = $('ideaInput'); const dish = inp.value.trim();
+  if (!dish) { toast('Écris une idée de plat'); return; }
+  if (IS_FAMILLE && !local.familyName) { pendingIdea = dish; openNameSheet(); return; }
+  inp.value = '';
+  if (!(await addIdea(dish))) { const i2 = $('ideaInput'); if (i2) i2.value = dish; }
 });
 document.addEventListener('change', (ev) => {
   const id = ev.target.dataset && ev.target.dataset.toggle;
@@ -1037,9 +1508,13 @@ $('nameForm').addEventListener('submit', async (ev) => {
   local.familyName = n; saveLocal();
   closeSheet('nameSheet');
   renderList();
+  renderIdeas();
   if (pendingItem) {
     const item = pendingItem; pendingItem = null;
     if (await addListItem(item)) toast('Article ajouté');
+  } else if (pendingIdea) {
+    const idea = pendingIdea; pendingIdea = null;
+    await addIdea(idea);
   } else toast(`Salut ${n} !`);
 });
 
@@ -1074,13 +1549,18 @@ async function init() {
     $('itemName').placeholder = 'Ajouter un article…';
     $('welcome').hidden = false;
     $('welcomeTxt').textContent = `Ajoute ce qui manque, ${OWNER || 'la personne qui fait les courses'} le verra tout de suite. Tu peux cocher ce qui est déjà pris et retirer ce que tu as ajouté.`;
+    $('famSeg').hidden = false;
     showTab('list');
     if (!local.familyName) setTimeout(openNameSheet, 400);
   } else {
     checkAutoReset();
   }
-  await loadShoppingList();
+  await Promise.all([loadShoppingList(), loadMenus(), loadIdeas()]);
   subscribeRealtime();
+  subscribeMenus();
+  subscribeIdeas();
+  renderIdeas();
+  if (IS_FAMILLE) renderMenus();
   renderAll();
   $('loading').style.display = 'none';
 }
