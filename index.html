@@ -244,6 +244,20 @@
   body.famille .top { padding-top: 14px; }
   body.famille.on-menus .add-bar { display: none; }
 
+  /* TIRAGE AU SORT */
+  .suggest-cta { margin: 14px 16px 0; width: calc(100% - 32px); border: 0; background: var(--surface); border-radius: var(--r-md); padding: 14px 16px; display: flex; align-items: center; gap: 12px; text-align: left; }
+  .suggest-cta:active { background: var(--soft); }
+  .suggest-cta .v { font-family: var(--serif); font-size: 17px; font-weight: 700; }
+  .suggest-cta .k { font-size: 12px; color: var(--muted); }
+  .sugg-card { margin-top: 16px; background: var(--bg); border-radius: var(--r-md); padding: 22px 18px; min-height: 200px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 10px; }
+  .sugg-card.roll { animation: roll .32s cubic-bezier(.3,.7,.4,1); }
+  @keyframes roll { 0% { opacity: 0; transform: translateY(10px) scale(.98); } 100% { opacity: 1; transform: none; } }
+  .sugg-dish { font-family: var(--serif); font-size: 28px; font-weight: 700; line-height: 1.15; }
+  .sugg-tags { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; }
+  .sugg-tag { font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 99px; background: var(--surface); color: var(--ink); }
+  .sugg-tag.mine { background: var(--lime); }
+  .sugg-ingr { font-size: 13px; color: var(--muted); line-height: 1.5; max-width: 320px; }
+
   /* IDÉES DE DÎNERS */
   .ideas { margin: 14px 16px 0; }
   .ideas:empty { display: none; }
@@ -391,6 +405,14 @@
     <button class="pill-btn" type="button" id="weekToList">Tout ajouter à la liste</button>
     <button class="link-btn" type="button" id="weekToday">Cette semaine</button>
   </div>
+  <button class="suggest-cta" type="button" id="suggestBtn">
+    <span class="tile" style="background:#F6E6C8">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="8.5" cy="8.5" r="1.2" fill="currentColor"/><circle cx="15.5" cy="15.5" r="1.2" fill="currentColor"/><circle cx="15.5" cy="8.5" r="1.2" fill="currentColor"/><circle cx="8.5" cy="15.5" r="1.2" fill="currentColor"/></svg></span>
+    <span style="flex:1;display:flex;flex-direction:column">
+      <span class="v">Je sais pas quoi faire ce soir</span>
+      <span class="k" id="suggestSub">Un plat au hasard parmi plus de 150</span></span>
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8C978F" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>
+  </button>
   <div class="ideas" id="ideas"></div>
   <div class="days" id="days"></div>
 </section>
@@ -557,6 +579,20 @@
       <button class="btn-ok" type="submit">Enregistrer</button>
     </div>
   </form>
+</div>
+
+<!-- SHEET : TIRAGE AU SORT -->
+<div class="overlay" id="suggestSheet">
+  <div class="sheet">
+    <div class="grab"></div>
+    <div class="sheet-title">Ce soir, on mange…</div>
+    <div class="chips" id="suggestFilters" style="margin-top:0" aria-label="Filtres"></div>
+    <div class="sugg-card" id="suggestCard" aria-live="polite"></div>
+    <div class="sheet-actions">
+      <button class="btn-cancel" type="button" id="suggestAgain">Un autre</button>
+      <button class="btn-ok" type="button" id="suggestGo">On fait ça</button>
+    </div>
+  </div>
 </div>
 
 <!-- SHEET : CHOISIR UN JOUR POUR UNE IDÉE -->
@@ -846,7 +882,7 @@ function renderHome() {
       <div class="ring">
         <svg width="196" height="196" viewBox="0 0 196 196" role="img" aria-label="${Math.round(pct * 100)} % du budget utilisé">
           <circle cx="98" cy="98" r="80" fill="none" stroke="var(--soft)" stroke-width="16"/>
-          <circle class="prog" cx="98" cy="98" r="80" fill="none" stroke="${stroke}" stroke-width="16" stroke-linecap="round" stroke-dasharray="${(C * pct).toFixed(1)} ${C.toFixed(1)}" transform="rotate(-90 98 98)"/>
+          <circle class="prog" cx="98" cy="98" r="80" fill="none" stroke="${stroke}" stroke-width="16" stroke-linecap="${pct > 0 ? 'round' : 'butt'}" stroke-dasharray="${(C * pct).toFixed(1)} ${C.toFixed(1)}" transform="rotate(-90 98 98)"/>
           <circle cx="98" cy="98" r="80" fill="none" stroke="var(--ink)" stroke-width="22" stroke-dasharray="2 ${C}" stroke-dashoffset="${markerOff.toFixed(1)}" transform="rotate(-90 98 98)" opacity=".55"/>
         </svg>
         <div class="ring-center">
@@ -1203,11 +1239,13 @@ function renderTodayMenu() {
   const list = thisWeekMenus;
   const m = list.find(x => x.day === today && x.slot === 'soir');
   el.hidden = false;
+  if (m) { el.dataset.goto = 'menus'; delete el.dataset.suggest; }
+  else { delete el.dataset.goto; el.dataset.suggest = ''; }
   el.innerHTML = `<span class="tile" style="background:var(--lime)">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 3v8M5 3v4a2 2 0 0 0 4 0V3M7 11v10M17 21V3c-2 1.5-3 4-3 7v3h3"/></svg></span>
     <span style="flex:1;display:flex;flex-direction:column">
-      <span class="k">${m ? 'Ce soir' : 'Menus de la semaine'}</span>
-      <span class="v">${m ? esc(m.dish) : 'Planifier les dîners'}</span></span>
+      <span class="k">${m ? 'Ce soir' : 'Rien de prévu ce soir'}</span>
+      <span class="v">${m ? esc(m.dish) : 'Une idée de plat ?'}</span></span>
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8C978F" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>`;
 }
 
@@ -1217,7 +1255,7 @@ function openMeal(day, slot, prefill) {
   editingMeal = { day, slot, ideaId: prefill ? prefill.ideaId : null };
   $('mealTitle').textContent = `${d ? d.name.replace(/^./, c => c.toUpperCase()) : ''} soir`;
   $('mealDish').value = prefill ? prefill.dish : (m ? m.dish : '');
-  $('mealIngr').value = prefill ? '' : (m ? splitIngr(m.ingredients).join('\n') : '');
+  $('mealIngr').value = prefill ? splitIngr(prefill.ingredients).join('\n') : (m ? splitIngr(m.ingredients).join('\n') : '');
   if (prefill) fillFromBook(prefill.dish);
   $('mealToList').checked = !m || !!prefill;
   $('mealDelete').hidden = !m;
@@ -1255,6 +1293,271 @@ async function weekToList() {
   const all = menus.flatMap(m => splitIngr(m.ingredients));
   await ingredientsToList(all);
 }
+// ============================================================
+// CATALOGUE DE PLATS & « JE SAIS PAS QUOI FAIRE CE SOIR »
+// Format : Nom|tags|saisons|ingrédients
+//   tags : r rapide · v végé · p poisson · e pas cher · m mijoté
+//   saisons : H hiver · P printemps · E été · A automne (vide = toute l'année)
+// ============================================================
+const CATALOGUE_RAW = `Hachis parmentier|e|HA|Viande hachée;Pommes de terre;Oignon;Lait;Beurre;Gruyère râpé
+Gratin dauphinois et salade|ve|HA|Pommes de terre;Crème fraîche;Lait;Ail;Salade
+Blanquette de veau|m|HA|Veau;Carottes;Champignons;Oignon;Crème fraîche;Bouillon;Riz
+Croque-monsieur|re||Pain de mie;Jambon;Gruyère râpé;Beurre;Salade
+Quiche lorraine|e||Pâte brisée;Lardons;Œufs;Crème fraîche;Lait;Salade
+Chili con carne|em|HA|Viande hachée;Haricots rouges;Tomates concassées;Oignon;Poivron;Épices chili;Riz
+Poulet basquaise|m|EA|Poulet;Poivrons;Tomates;Oignon;Ail;Riz
+Crêpes salées|re||Farine;Œufs;Lait;Jambon;Gruyère râpé;Champignons
+Lasagnes|m||Pâtes à lasagnes;Viande hachée;Sauce tomate;Oignon;Lait;Beurre;Farine;Gruyère râpé
+Spaghetti bolognaise|e||Spaghetti;Viande hachée;Sauce tomate;Oignon;Carotte;Parmesan
+Pâtes carbonara|re||Spaghetti;Lardons;Œufs;Parmesan;Crème fraîche
+Bœuf bourguignon|m|HA|Bœuf à braiser;Vin rouge;Carottes;Lardons;Champignons;Oignons;Pommes de terre
+Pot-au-feu|m|H|Bœuf pot-au-feu;Os à moelle;Carottes;Poireaux;Navets;Pommes de terre;Céleri
+Tartiflette|e|H|Pommes de terre;Reblochon;Lardons;Oignon;Crème fraîche;Salade
+Raclette||H|Fromage à raclette;Pommes de terre;Charcuterie;Cornichons;Salade
+Fondue savoyarde||H|Comté;Beaufort;Emmental;Vin blanc;Pain;Ail
+Choucroute garnie|m|H|Choucroute;Saucisses de Strasbourg;Saucisses de Morteau;Lard fumé;Pommes de terre
+Cassoulet|m|H|Haricots blancs;Saucisses de Toulouse;Confit de canard;Tomates;Oignon
+Petit salé aux lentilles|em|HA|Petit salé;Lentilles vertes;Carottes;Oignon
+Poulet rôti et pommes de terre|e||Poulet entier;Pommes de terre;Ail;Thym;Beurre
+Steak frites|r||Steaks;Frites;Salade
+Poisson pané et purée|rpe||Poisson pané;Pommes de terre;Lait;Beurre
+Saumon, riz et haricots verts|rp||Pavés de saumon;Riz;Citron;Haricots verts
+Cabillaud à la provençale|p|E|Cabillaud;Tomates;Courgettes;Olives;Ail;Riz
+Moules-frites|rp|EA|Moules;Frites;Échalotes;Vin blanc;Persil;Crème fraîche
+Brandade de morue|p|H|Morue;Pommes de terre;Lait;Ail;Huile d'olive;Salade
+Gratin de pâtes au jambon|re||Pâtes;Jambon;Crème fraîche;Gruyère râpé
+Tortilla de pommes de terre|rve||Œufs;Pommes de terre;Oignon;Salade
+Soupe de légumes|vem|HA|Carottes;Poireaux;Pommes de terre;Courgettes;Bouillon;Pain
+Velouté de potiron|ve|A|Potiron;Pommes de terre;Oignon;Crème fraîche;Bouillon
+Ratatouille et riz|vm|E|Courgettes;Aubergines;Poivrons;Tomates;Oignon;Ail;Riz
+Tomates farcies|e|E|Tomates;Chair à saucisse;Oignon;Riz;Persil
+Courgettes farcies|e|E|Courgettes;Viande hachée;Oignon;Riz;Gruyère râpé
+Endives au jambon|e|H|Endives;Jambon;Lait;Beurre;Farine;Gruyère râpé
+Gratin de chou-fleur|ve|HA|Chou-fleur;Lait;Beurre;Farine;Gruyère râpé
+Parmentier de canard|m|H|Confit de canard;Pommes de terre;Lait;Beurre;Échalotes
+Pizza maison|e||Pâte à pizza;Sauce tomate;Mozzarella;Jambon;Champignons;Olives
+Tarte au thon|rpe||Pâte brisée;Thon en boîte;Tomates;Moutarde;Œufs;Crème fraîche
+Tarte aux poireaux|ve|HA|Pâte brisée;Poireaux;Œufs;Crème fraîche;Gruyère râpé
+Quiche saumon épinards|p||Pâte brisée;Saumon fumé;Épinards;Œufs;Crème fraîche
+Salade niçoise|rp|E|Thon en boîte;Œufs;Tomates;Haricots verts;Olives;Pommes de terre;Salade
+Salade de pâtes|rve|E|Pâtes;Tomates cerises;Mozzarella;Maïs;Basilic
+Taboulé|rve|E|Semoule;Tomates;Concombre;Menthe;Persil;Citron
+Hamburgers maison|r||Pains à burger;Steaks hachés;Cheddar;Tomates;Salade;Oignon;Frites
+Fajitas au poulet|r||Tortillas;Poulet;Poivrons;Oignon;Crème fraîche;Fromage râpé;Épices fajitas
+Curry de poulet|r||Poulet;Lait de coco;Curry;Oignon;Riz
+Poulet à la crème et champignons|r||Poulet;Champignons;Crème fraîche;Échalotes;Riz
+Escalopes milanaises|r||Escalopes de dinde;Chapelure;Œufs;Farine;Spaghetti;Sauce tomate
+Cordon bleu et haricots verts|re||Cordons bleus;Haricots verts
+Saucisses purée|re||Saucisses;Pommes de terre;Lait;Beurre
+Saucisse de Morteau aux lentilles|e|HA|Saucisses de Morteau;Lentilles vertes;Carottes;Oignon
+Rôti de porc et flageolets|e||Rôti de porc;Flageolets;Oignon;Ail
+Côtes de porc à la moutarde|re||Côtes de porc;Moutarde;Crème fraîche;Pommes de terre
+Filet mignon à la moutarde|r||Filet mignon de porc;Moutarde;Crème fraîche;Tagliatelles
+Osso buco|m|H|Jarret de veau;Tomates concassées;Carottes;Oignon;Vin blanc;Riz
+Navarin d'agneau|m|P|Épaule d'agneau;Carottes;Navets;Petits pois;Pommes de terre;Oignon
+Gigot d'agneau et flageolets|m|P|Gigot d'agneau;Flageolets;Ail;Romarin
+Couscous|m|HA|Semoule;Poulet;Merguez;Pois chiches;Carottes;Courgettes;Navets;Épices couscous
+Tajine de poulet aux citrons|m||Poulet;Citrons confits;Olives;Oignon;Épices tajine;Semoule
+Paella|mp||Riz;Poulet;Crevettes;Moules;Chorizo;Petits pois;Poivron;Safran
+Risotto aux champignons|v|A|Riz arborio;Champignons;Oignon;Vin blanc;Parmesan;Bouillon
+Riz cantonais|re||Riz;Œufs;Jambon;Petits pois;Crevettes;Sauce soja
+Nouilles sautées au poulet|r||Nouilles chinoises;Poulet;Carottes;Poivron;Sauce soja;Oignon
+Wok de légumes|rv||Nouilles chinoises;Brocoli;Carottes;Poivron;Champignons;Sauce soja
+Poulet teriyaki|r||Poulet;Sauce teriyaki;Riz;Brocoli
+Bœuf aux oignons|r||Bœuf émincé;Oignons;Sauce soja;Riz
+Porc au caramel|e||Échine de porc;Sucre;Nuoc-mâm;Oignon;Riz
+Pâtes au pesto|rve||Pâtes;Pesto;Parmesan;Tomates cerises
+Pâtes au saumon|rp||Tagliatelles;Saumon fumé;Crème fraîche;Citron;Aneth
+Pâtes au thon et à la tomate|rpe||Pâtes;Thon en boîte;Sauce tomate;Oignon;Olives
+Pâtes aux courgettes|rve|E|Pâtes;Courgettes;Ail;Parmesan;Crème fraîche
+One pot pasta|rve||Pâtes;Tomates cerises;Oignon;Ail;Basilic;Parmesan
+Gnocchis gratinés|rv||Gnocchis;Sauce tomate;Mozzarella;Basilic
+Cannellonis ricotta épinards|v||Cannellonis;Ricotta;Épinards;Sauce tomate;Gruyère râpé
+Gratin de courgettes|ve|E|Courgettes;Œufs;Crème fraîche;Gruyère râpé;Riz
+Gratin d'aubergines à la parmesane|v|E|Aubergines;Sauce tomate;Mozzarella;Parmesan;Basilic
+Dahl de lentilles corail|vem||Lentilles corail;Lait de coco;Tomates concassées;Oignon;Curry;Riz
+Curry de pois chiches|rve||Pois chiches;Lait de coco;Épinards;Curry;Oignon;Riz
+Chili sin carne|vem|HA|Haricots rouges;Maïs;Tomates concassées;Poivron;Oignon;Épices chili;Riz
+Buddha bowl|rv||Quinoa;Pois chiches;Avocat;Carottes;Chou rouge;Œufs
+Œufs cocotte|rve||Œufs;Crème fraîche;Jambon;Pain
+Shakshuka|rve||Œufs;Tomates concassées;Poivrons;Oignon;Cumin;Pain
+Soupe à l'oignon gratinée|vem|H|Oignons;Bouillon;Pain;Gruyère râpé;Beurre
+Soupe poireaux pommes de terre|ve|H|Poireaux;Pommes de terre;Bouillon;Crème fraîche
+Minestrone|vem|A|Courgettes;Carottes;Haricots blancs;Tomates;Petites pâtes;Céleri
+Potée auvergnate|m|H|Chou vert;Lard fumé;Saucisses;Carottes;Pommes de terre;Navets
+Gratin de poisson aux épinards|p||Cabillaud;Épinards;Crème fraîche;Gruyère râpé;Pommes de terre
+Papillotes de saumon|rp|E|Pavés de saumon;Courgettes;Citron;Aneth;Riz
+Crevettes à l'ail|rp||Crevettes;Ail;Persil;Riz;Citron
+Colin, riz et sauce citron|rp||Filets de colin;Riz;Citron;Crème fraîche;Haricots verts
+Sardines grillées|rpe|E|Sardines;Citron;Pommes de terre;Salade
+Truite aux amandes|rp|P|Truites;Amandes effilées;Beurre;Citron;Pommes de terre
+Fish and chips|p||Cabillaud;Farine;Bière;Frites;Citron
+Soupe de poisson|p|H|Soupe de poisson;Croûtons;Rouille;Gruyère râpé
+Galettes complètes|re||Farine de sarrasin;Œufs;Jambon;Gruyère râpé;Beurre
+Tarte flambée|re||Pâte à pizza;Crème fraîche;Lardons;Oignons
+Hot-dogs|re||Pains à hot-dog;Saucisses de Strasbourg;Moutarde;Oignons frits;Frites
+Wraps poulet crudités|r|E|Tortillas;Poulet;Salade;Tomates;Sauce blanche
+Salade César|r|E|Poulet;Salade romaine;Parmesan;Croûtons;Sauce César
+Salade de lentilles|rve||Lentilles en conserve;Échalote;Carottes;Œufs;Moutarde
+Salade de riz|rpe|E|Riz;Thon en boîte;Maïs;Tomates;Œufs;Olives
+Pan bagnat|rp|E|Pains ronds;Thon en boîte;Tomates;Œufs;Olives;Salade
+Gaspacho et tartines|rv|E|Tomates;Concombre;Poivron;Ail;Huile d'olive;Pain
+Brochettes de poulet|r|E|Brochettes de poulet;Poivrons;Oignons;Pommes de terre;Salade
+Merguez et semoule|re|E|Merguez;Semoule;Tomates;Poivrons
+Cuisses de poulet au four|e||Cuisses de poulet;Pommes de terre;Oignons;Thym;Ail
+Poulet vallée d'Auge|m|A|Poulet;Champignons;Crème fraîche;Cidre;Pommes;Riz
+Coq au vin|m|H|Poulet;Vin rouge;Lardons;Champignons;Oignons;Carottes;Pommes de terre
+Lapin à la moutarde|m|A|Lapin;Moutarde;Crème fraîche;Vin blanc;Pommes de terre
+Carbonade flamande|m|H|Bœuf à braiser;Bière brune;Oignons;Pain d'épices;Frites
+Bœuf carottes|em|HA|Bœuf à braiser;Carottes;Oignons;Vin blanc;Pommes de terre
+Rôti de bœuf et haricots verts|r||Rôti de bœuf;Haricots verts;Pommes de terre
+Steak haché coquillettes|re||Steaks hachés;Coquillettes;Beurre;Gruyère râpé
+Coquillettes jambon fromage|re||Coquillettes;Jambon;Gruyère râpé;Beurre
+Boulettes sauce tomate|e||Viande hachée;Œufs;Chapelure;Sauce tomate;Oignon;Spaghetti
+Chou farci|em|H|Chou vert;Chair à saucisse;Oignon;Carottes;Riz
+Poivrons farcis|e|E|Poivrons;Viande hachée;Riz;Sauce tomate;Oignon
+Moussaka|m|E|Aubergines;Viande hachée;Tomates concassées;Oignon;Lait;Farine;Beurre
+Gratin de brocolis au jambon|re|HA|Brocolis;Jambon;Crème fraîche;Gruyère râpé
+Cake salé jambon olives|e||Farine;Œufs;Lait;Huile;Olives;Jambon;Gruyère râpé;Salade
+Bouchées à la reine|r||Vol-au-vent;Poulet;Champignons;Crème fraîche;Riz
+Tagliatelles aux champignons|rv|A|Tagliatelles;Champignons;Crème fraîche;Ail;Persil;Parmesan
+Légumes rôtis et halloumi|rv|E|Courgettes;Poivrons;Oignons rouges;Halloumi;Semoule
+Poulet et patates douces au four|r|A|Poulet;Patates douces;Paprika;Salade
+Velouté de carottes au cumin|rve|HA|Carottes;Oignon;Cumin;Bouillon;Crème fraîche
+Œufs brouillés et tartines|rve||Œufs;Pain;Beurre;Salade
+Tarte à la tomate et moutarde|ve|E|Pâte brisée;Tomates;Moutarde;Gruyère râpé;Herbes de Provence
+Croziflette|e|H|Crozets;Reblochon;Lardons;Oignon;Crème fraîche
+Aligot saucisses|e|H|Pommes de terre;Tomme fraîche;Ail;Crème fraîche;Saucisses de Toulouse
+Poke bowl au saumon|rp|E|Saumon frais;Riz;Avocat;Concombre;Edamame;Sauce soja
+Poulet tikka masala|||Poulet;Yaourt;Tomates concassées;Crème fraîche;Épices tikka;Riz;Naans
+Gratin de ravioles|r||Ravioles;Crème fraîche;Gruyère râpé;Salade
+Tortellinis crème jambon|re||Tortellinis;Jambon;Crème fraîche;Parmesan
+Encornets à la provençale|p|E|Encornets;Tomates;Ail;Persil;Riz
+Dorade au four|p|E|Dorades;Citron;Tomates;Fenouil;Pommes de terre
+Lieu noir et épinards à la crème|rp||Filets de lieu noir;Épinards;Crème fraîche;Riz
+Quenelles sauce tomate|re||Quenelles;Sauce tomate;Gruyère râpé;Riz
+Pommes de terre au four et fromage blanc|rve||Pommes de terre;Fromage blanc;Ciboulette;Salade
+Salade de chèvre chaud|rv||Salade;Bûche de chèvre;Pain;Miel;Noix
+Soupe chinoise au poulet|r|H|Nouilles;Bouillon;Poulet;Champignons;Ciboulette;Sauce soja
+Penne poulet brocoli|r||Penne;Poulet;Brocoli;Crème fraîche;Parmesan
+Rougail saucisses|m||Saucisses fumées;Tomates;Oignons;Gingembre;Piment;Riz
+Colombo de poulet|m||Poulet;Poudre de colombo;Pommes de terre;Courgettes;Oignon;Riz
+Enchiladas|||Tortillas;Poulet;Haricots rouges;Sauce tomate;Fromage râpé
+Gratin de macaronis|ve||Macaronis;Lait;Beurre;Farine;Gruyère râpé
+Asperges et œufs mollets|rv|P|Asperges;Œufs;Pain;Beurre
+Petits pois carottes et saucisses|re|P|Petits pois;Carottes;Saucisses;Oignon
+Risotto aux asperges|v|P|Riz arborio;Asperges;Parmesan;Oignon;Bouillon
+Quiche aux légumes|ve||Pâte brisée;Courgettes;Poivrons;Œufs;Crème fraîche
+Pommes à l'huile et harengs|rp|HA|Harengs fumés;Pommes de terre;Oignons rouges;Salade
+Bruschettas et salade|rv|E|Pain;Tomates;Mozzarella;Basilic;Salade
+Velouté de courgettes|rve|E|Courgettes;Vache qui rit;Bouillon;Oignon
+Curry de crevettes|rp||Crevettes;Lait de coco;Curry;Poivron;Riz
+Pâtes crème et lardons|re||Pâtes;Lardons;Crème fraîche;Oignon
+Jambon purée|re||Jambon;Pommes de terre;Lait;Beurre
+Bœuf Stroganoff|r||Bœuf émincé;Champignons;Crème fraîche;Paprika;Oignon;Riz
+Escalopes de dinde à la crème|re||Escalopes de dinde;Crème fraîche;Champignons;Pâtes
+Magret et pommes sautées|r||Magret de canard;Pommes de terre;Salade
+Velouté de champignons|rv|A|Champignons;Pommes de terre;Crème fraîche;Bouillon;Oignon
+Hachis parmentier de poisson|pe||Cabillaud;Pommes de terre;Lait;Beurre;Gruyère râpé
+Poêlée de gnocchis aux légumes|rv||Gnocchis;Courgettes;Tomates cerises;Pesto;Parmesan
+Galettes de pommes de terre et salade|ve||Pommes de terre;Œufs;Farine;Oignon;Salade
+Saumon à l'oseille|p|P|Pavés de saumon;Oseille;Crème fraîche;Riz`;
+const CATALOGUE = CATALOGUE_RAW.split('\n').map(l => {
+  const [dish, tags, seasons, ingr] = l.split('|');
+  return { dish, tags: tags || '', seasons: seasons || '', ingredients: (ingr || '').split(';').join('\n') };
+});
+const SUGG_FILTERS = [
+  { id: 'r', label: 'Rapide' }, { id: 'v', label: 'Végé' }, { id: 'p', label: 'Poisson' },
+  { id: 'e', label: 'Pas cher' }, { id: 'm', label: 'Mijoté' }, { id: 'saison', label: 'De saison' }, { id: 'mine', label: 'Mes plats' }
+];
+const TAG_LABELS = { r: 'Rapide', v: 'Végé', p: 'Poisson', e: 'Pas cher', m: 'Mijoté' };
+let suggFilters = new Set();
+let suggSeen = new Set();
+let suggCurrent = null;
+
+function currentSeason() { const m = new Date().getMonth(); return m === 11 || m < 2 ? 'H' : m < 5 ? 'P' : m < 8 ? 'E' : 'A'; }
+function suggestionPool() {
+  const book = local.dishBook || {};
+  const byKey = new Map();
+  CATALOGUE.forEach(c => byKey.set(norm(c.dish), { ...c, mine: !!book[norm(c.dish)] }));
+  // Plats de ta mère absents du catalogue
+  Object.values(book).forEach(b => {
+    const k = norm(b.dish);
+    if (byKey.has(k)) { const c = byKey.get(k); if (splitIngr(b.ingredients).length) c.ingredients = b.ingredients; }
+    else byKey.set(k, { dish: b.dish, tags: '', seasons: '', ingredients: b.ingredients, mine: true });
+  });
+  return [...byKey.values()];
+}
+function drawSuggestion() {
+  const season = currentSeason();
+  const tagF = [...suggFilters].filter(f => TAG_LABELS[f]);
+  // À éviter : prévu cette semaine / semaine affichée, ou planifié ces 14 derniers jours
+  const avoid = new Set([...thisWeekMenus, ...menus].map(m => norm(m.dish)));
+  const twoWeeks = Date.now() - 14 * 86400000;
+  Object.values(local.dishBook || {}).forEach(b => { if (b.used > twoWeeks) avoid.add(norm(b.dish)); });
+  let pool = suggestionPool().filter(d =>
+    tagF.every(t => d.tags.includes(t)) &&
+    (!suggFilters.has('saison') || d.seasons.includes(season)) &&
+    (!suggFilters.has('mine') || d.mine));
+  const total = pool.length;
+  let fresh = pool.filter(d => !avoid.has(norm(d.dish)) && !suggSeen.has(norm(d.dish)));
+  if (fresh.length === 0) { suggSeen.clear(); fresh = pool.filter(d => !avoid.has(norm(d.dish))); }
+  if (fresh.length === 0) fresh = pool;
+  if (fresh.length === 0) return { dish: null, total };
+  // Pondération : de saison ×2, hors saison ×0,15
+  const w = fresh.map(d => !d.seasons ? 1 : d.seasons.includes(season) ? 2 : 0.15);
+  let r = Math.random() * w.reduce((a, b) => a + b, 0);
+  let pick = fresh[fresh.length - 1];
+  for (let i = 0; i < fresh.length; i++) { r -= w[i]; if (r <= 0) { pick = fresh[i]; break; } }
+  suggSeen.add(norm(pick.dish));
+  return { dish: pick, total };
+}
+function renderSuggestFilters() {
+  const hasMine = Object.keys(local.dishBook || {}).length > 0;
+  $('suggestFilters').innerHTML = SUGG_FILTERS.filter(f => f.id !== 'mine' || hasMine).map(f =>
+    `<button type="button" class="chip ${suggFilters.has(f.id) ? 'on' : ''}" aria-pressed="${suggFilters.has(f.id)}" data-sfilter="${f.id}">${f.label}</button>`).join('');
+}
+function rollSuggestion() {
+  const { dish, total } = drawSuggestion();
+  suggCurrent = dish;
+  const card = $('suggestCard');
+  card.classList.remove('roll'); void card.offsetWidth; card.classList.add('roll');
+  $('suggestGo').disabled = !dish; $('suggestAgain').disabled = !dish;
+  if (!dish) {
+    card.innerHTML = `<div class="p-muted">Aucun plat ne correspond à ces filtres.<br>Essaie d'en retirer un.</div>`;
+    return;
+  }
+  const tags = [...dish.tags].map(t => TAG_LABELS[t]).filter(Boolean);
+  if (dish.seasons.includes(currentSeason())) tags.push('De saison');
+  const ing = splitIngr(dish.ingredients);
+  card.innerHTML = `
+    <div class="sugg-dish">${esc(dish.dish)}</div>
+    <div class="sugg-tags">${dish.mine ? '<span class="sugg-tag mine">Déjà fait</span>' : ''}${tags.map(t => `<span class="sugg-tag">${t}</span>`).join('')}</div>
+    ${ing.length ? `<div class="sugg-ingr">${esc(ing.join(' · '))}</div>` : ''}
+    <div class="p-muted" style="font-size:12px">${total} plat${total > 1 ? 's' : ''} possible${total > 1 ? 's' : ''}</div>`;
+  $('suggestGo').textContent = IS_FAMILLE ? `Proposer à ${OWNER || 'la cheffe'}` : 'On fait ça';
+  $('suggestGo').hidden = IS_FAMILLE && !ideasRemote;
+}
+function openSuggest() {
+  suggSeen.clear();
+  renderSuggestFilters();
+  rollSuggestion();
+  openSheet('suggestSheet');
+}
+async function acceptSuggestion() {
+  const d = suggCurrent; if (!d) return;
+  closeSheet('suggestSheet');
+  if (IS_FAMILLE) {
+    if (!local.familyName) { pendingIdea = d.dish; openNameSheet(); return; }
+    await addIdea(d.dish); return;
+  }
+  pickIdea = { dish: d.dish, ingredients: d.ingredients, id: null };
+  pickOffset = weekOffset;
+  $('pickTitle').textContent = `Quel soir pour « ${d.dish} » ?`;
+  renderPick();
+  openSheet('pickSheet');
+}
+
 // ============================================================
 // IDÉES DE DÎNERS (proposées par la famille, choisies par la propriétaire)
 // Table Supabase `menu_ideas`.
@@ -1358,7 +1661,7 @@ async function choosePickDay(dayKey) {
   const idea = pickIdea;
   // Afficher la bonne semaine puis ouvrir le repas pré-rempli
   if (weekOffset !== pickOffset) { weekOffset = pickOffset; await loadMenus(); renderMenus(); }
-  openMeal(dayKey, 'soir', { dish: idea.dish, ideaId: idea.id });
+  openMeal(dayKey, 'soir', { dish: idea.dish, ingredients: idea.ingredients || '', ideaId: idea.id || null });
 }
 
 async function changeWeek(delta) {
@@ -1428,6 +1731,7 @@ document.addEventListener('click', (ev) => {
   const t = ev.target.closest('button, [data-goto]');
   if (!t) return;
   if (t.dataset.tab) return showTab(t.dataset.tab);
+  if (t.dataset.suggest !== undefined) return openSuggest();
   if (t.dataset.goto) return showTab(t.dataset.goto);
   if (t.id === 'fab') return openExpense('');
   if (t.dataset.quick !== undefined) return openExpense(t.dataset.quick);
@@ -1453,6 +1757,14 @@ document.addEventListener('click', (ev) => {
   if (t.id === 'weekToday') return changeWeek(0);
   if (t.id === 'weekToList') return weekToList();
   if (t.dataset.plan) return openPick(t.dataset.plan);
+  if (t.id === 'suggestBtn' || t.dataset.suggest !== undefined) return openSuggest();
+  if (t.id === 'suggestAgain') return rollSuggestion();
+  if (t.id === 'suggestGo') return acceptSuggestion();
+  if (t.dataset.sfilter) {
+    const f = t.dataset.sfilter;
+    suggFilters.has(f) ? suggFilters.delete(f) : suggFilters.add(f);
+    suggSeen.clear(); renderSuggestFilters(); return rollSuggestion();
+  }
   if (t.dataset.delIdea) return deleteIdea(t.dataset.delIdea);
   if (t.dataset.pick) return choosePickDay(t.dataset.pick);
   if (t.id === 'pickPrev') { pickOffset = Math.max(0, pickOffset - 1); return renderPick(); }
