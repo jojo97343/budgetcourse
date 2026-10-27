@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="theme-color" content="#F3F5EF">
-<title>Budget Courses</title>
+<title>Courses &amp; Dîners</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -47,6 +47,7 @@
   .top-sub { font-size: 13px; color: var(--muted); }
   .top-title { font-family: var(--serif); font-size: 28px; font-weight: 700; line-height: 1.15; }
   .sync { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: var(--muted); background: var(--surface); padding: 8px 12px; border-radius: 99px; }
+  .top-sub .sync-dot { display: inline-block; margin-right: 6px; vertical-align: 1px; }
   .sync-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); animation: pulse 2s infinite; }
   .sync-dot.off { background: #9AA39C; animation: none; }
   @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: .35; } }
@@ -171,14 +172,14 @@
 
   /* NAV */
   .nav-wrap { position: fixed; left: 0; right: 0; bottom: 0; padding: 0 16px calc(16px + env(safe-area-inset-bottom)); z-index: 100; pointer-events: none; }
-  nav { pointer-events: auto; max-width: 448px; margin: 0 auto; height: 64px; background: var(--nav); border-radius: 32px; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); align-items: center; box-shadow: 0 10px 30px rgba(30,42,34,.18); }
+  nav { pointer-events: auto; max-width: 448px; margin: 0 auto; height: 64px; background: var(--nav); border-radius: 32px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); align-items: center; box-shadow: 0 10px 30px rgba(30,42,34,.18); }
   nav.famille { grid-template-columns: 1fr; }
-  .nav-btn { height: 64px; border: 0; background: none; color: var(--nav-muted); display: flex; align-items: center; justify-content: center; position: relative; }
+  .nav-btn { height: 64px; border: 0; background: none; color: var(--nav-muted); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; position: relative; }
+  .nav-btn .lbl { font-size: 11px; font-weight: 700; letter-spacing: .01em; }
   .nav-btn.active { color: #fff; }
-  .nav-btn .badge { position: absolute; top: 12px; left: calc(50% + 6px); min-width: 18px; height: 18px; padding: 0 5px; border-radius: 9px; background: var(--lime); color: var(--ink); font-size: 11px; font-weight: 800; display: none; align-items: center; justify-content: center; }
+  .nav-btn .badge { position: absolute; top: 6px; left: calc(50% + 5px); min-width: 18px; height: 18px; padding: 0 5px; border-radius: 9px; background: var(--lime); color: var(--ink); font-size: 11px; font-weight: 800; display: none; align-items: center; justify-content: center; }
   .nav-btn .badge.on { display: inline-flex; }
-  .fab { width: 56px; height: 56px; border-radius: 28px; border: 0; background: var(--lime); color: var(--ink); display: flex; align-items: center; justify-content: center; margin: 0 auto; transition: transform .12s; }
-  .fab:active { transform: scale(.94); }
+  .nav-btn .badge.warn { background: #F0B35A; }
 
   /* SHEET / MODAL */
   .overlay { position: fixed; inset: 0; background: rgba(20,28,23,.45); z-index: 200; display: none; align-items: flex-end; justify-content: center; }
@@ -292,7 +293,7 @@
   .idea-by { font-size: 12px; color: var(--muted); }
   .idea-plan { height: 38px; padding: 0 14px; border-radius: 19px; border: 0; background: var(--accent); color: #fff; font-weight: 700; font-size: 13px; flex-shrink: 0; }
   .ideas-empty { font-size: 13px; color: var(--muted); padding: 10px 0 8px; }
-  .nav-btn .dot-badge { position: absolute; top: 16px; left: calc(50% + 7px); width: 9px; height: 9px; border-radius: 50%; background: #F0B35A; display: none; }
+  .nav-btn .dot-badge { position: absolute; top: 9px; left: calc(50% + 7px); width: 9px; height: 9px; border-radius: 50%; background: #F0B35A; display: none; }
   .nav-btn .dot-badge.on { display: block; }
   .pick-week { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 10px; }
   .pick-week .round-btn { background: var(--bg); }
@@ -304,11 +305,6 @@
   .pick-day .w.free { color: var(--accent); font-weight: 600; }
 
   /* GARDE-MANGER */
-  .list-seg { margin: calc(14px + env(safe-area-inset-top)) 16px 0; height: 46px; background: var(--surface); border-radius: 23px; padding: 4px; display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
-  .list-seg button { border: 0; border-radius: 19px; background: transparent; font-weight: 700; font-size: 14px; color: var(--muted); }
-  .list-seg button.on { background: var(--ink); color: #fff; }
-  body.famille .list-seg { display: none; }
-  #tab-list .top, #tab-pantry .top { padding-top: 14px; }
   body.famille #tab-list .top { padding-top: 14px; }
   .zone-chips { margin-top: 14px; padding: 0 16px; display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; }
   .zone-chips::-webkit-scrollbar { display: none; }
@@ -352,6 +348,41 @@
   .color-dots button { width: 36px; height: 36px; border-radius: 18px; border: 1px solid rgba(0,0,0,.08); }
   .color-dots button[aria-checked="true"] { box-shadow: 0 0 0 3px var(--surface), 0 0 0 5px var(--ink); }
 
+  /* ACCUEIL */
+  .round-add { width: 44px; height: 44px; border-radius: 22px; border: 0; background: var(--accent); color: #fff; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .usual { margin: 10px 16px 0; display: flex; gap: 6px; align-items: center; overflow-x: auto; scrollbar-width: none; }
+  .usual::-webkit-scrollbar { display: none; }
+  .usual:empty { display: none; }
+  .usual .k { font-size: 12px; color: var(--muted); flex-shrink: 0; }
+  .usual button { height: 34px; padding: 0 12px; border-radius: 17px; border: 0; background: var(--surface); font-weight: 600; font-size: 13px; white-space: nowrap; flex-shrink: 0; }
+  .usual button:active { background: var(--lime); }
+  .home-grid { margin: 16px 16px 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .ht { border: 0; border-radius: 24px; padding: 16px; display: flex; flex-direction: column; align-items: flex-start; gap: 6px; text-align: left; min-height: 132px; color: var(--ink); background: var(--surface); }
+  .ht:active { transform: scale(.985); }
+  .ht[hidden] { display: none; }
+  .ht .k { font-size: 13px; font-weight: 800; }
+  .ht .big { font-family: var(--serif); font-size: 30px; font-weight: 700; line-height: 1; }
+  .ht .s { font-size: 12px; }
+  .ht-list { grid-row: span 2; background: var(--lime); }
+  .ht-list .big { font-size: 44px; }
+  .ht-list .s { color: var(--accent-dark); }
+  .ht-list .prev { margin-top: 6px; display: flex; flex-direction: column; gap: 6px; width: 100%; }
+  .ht-list .prev span { font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+  .ht-list .prev span::before { content: ''; width: 14px; height: 14px; border-radius: 4px; border: 1.5px solid var(--accent-dark); flex-shrink: 0; box-sizing: border-box; }
+  .ht-list .prev .more { color: var(--accent-dark); font-weight: 500; font-size: 12px; }
+  .ht-list .prev .more::before { display: none; }
+  .ht-dinner { background: var(--ink); color: #fff; }
+  .ht-dinner .k { font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--lime); }
+  .ht-dinner .dish { font-family: var(--serif); font-size: 20px; font-weight: 700; line-height: 1.15; overflow-wrap: anywhere; }
+  .ht-dinner .s { margin-top: auto; color: #C3CEC6; }
+  .ht-pantry.warn { background: var(--warn-bg); color: var(--warn); }
+  .ht-pantry .s { margin-top: auto; }
+  .ht-ideas { grid-column: 1 / -1; min-height: 0; flex-direction: row; align-items: center; gap: 12px; background: #FFF8EC; box-shadow: inset 0 0 0 1.5px #F1DFC0; padding: 14px 16px; }
+  .ht-ideas .people .avatar { width: 30px; height: 30px; font-size: 12px; border-color: #FFF8EC; }
+  .ht-ideas .people .avatar:first-child { margin-left: 0; }
+  .ht-ideas .go { font-size: 13px; font-weight: 700; color: var(--accent); flex-shrink: 0; }
+  .ht-dice { grid-column: 1 / -1; min-height: 56px; flex-direction: row; align-items: center; justify-content: center; gap: 10px; font-weight: 700; font-size: 14px; padding: 0 16px; }
+
   /* MODE FAMILLE */
   body.famille .nav-wrap { display: none; }
   body.famille { padding-bottom: calc(100px + env(safe-area-inset-bottom)); }
@@ -374,7 +405,7 @@
 <body>
 
 <div class="loading" id="loading">
-  <div class="loading-title">Budget Courses</div>
+  <div class="loading-title">Courses &amp; Dîners</div>
   <div class="spinner"></div>
 </div>
 
@@ -387,47 +418,34 @@
 </div>
 
 <!-- ============ ACCUEIL ============ -->
-<section class="tab active" id="tab-home">
+<section class="tab" id="tab-home">
   <header class="top">
     <div>
-      <div class="top-sub" id="hello">Bonjour</div>
-      <h1 class="top-title" id="monthTitle">—</h1>
+      <div class="top-sub" id="homeDate">—</div>
+      <h1 class="top-title" id="homeHello">Bonjour</h1>
     </div>
-    <div style="display:flex;align-items:center;gap:8px">
-      <span class="sync"><span class="sync-dot" id="syncDot"></span><span id="syncTxt">en ligne</span></span>
-      <button class="round-btn" type="button" data-goto="settings" aria-label="Réglages">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg>
-      </button>
-    </div>
+    <button class="round-btn" type="button" data-goto="settings" aria-label="Réglages"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg></button>
   </header>
-
-  <div class="hero" id="hero"></div>
-
-  <button class="today-menu" type="button" data-goto="menus" id="todayMenu" hidden></button>
-
-  <div class="section">
-    <div class="h2">Ajout rapide</div>
-    <div class="quick-grid" id="quickGrid"></div>
-  </div>
-
-  <div class="section">
-    <div class="row-between">
-      <span class="h2">Récemment</span>
-      <button class="link-btn" id="toggleAllBtn" type="button">Tout voir</button>
-    </div>
-    <div class="exp-list" id="recentList"></div>
+  <form class="add-bar" id="homeAdd" autocomplete="off" style="margin-top:14px">
+    <label class="sr" for="homeAddInput">Ajouter à la liste de courses</label>
+    <input id="homeAddInput" type="text" placeholder="Il manque quelque chose ?" enterkeyhint="done">
+    <button class="round-add" type="submit" aria-label="Ajouter à la liste"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button>
+  </form>
+  <div class="usual" id="usual"></div>
+  <div class="home-grid">
+    <button type="button" class="ht ht-list" data-goto="list" id="htList"></button>
+    <button type="button" class="ht ht-dinner" id="htDinner"></button>
+    <button type="button" class="ht ht-pantry" data-goto="pantry" id="htPantry"></button>
+    <button type="button" class="ht ht-ideas" data-goto="menus" id="htIdeas"></button>
+    <button type="button" class="ht ht-dice" id="htDice"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="8.5" cy="8.5" r="1.2" fill="currentColor"/><circle cx="15.5" cy="15.5" r="1.2" fill="currentColor"/><circle cx="15.5" cy="8.5" r="1.2" fill="currentColor"/><circle cx="8.5" cy="15.5" r="1.2" fill="currentColor"/></svg><span id="htDiceTxt">Je sais pas quoi faire ce soir</span></button>
   </div>
 </section>
 
 <!-- ============ LISTE ============ -->
 <section class="tab" id="tab-list">
-  <div class="list-seg" role="tablist" aria-label="Courses ou garde-manger">
-    <button type="button" role="tab" data-tab="list">Courses</button>
-    <button type="button" role="tab" data-tab="pantry">Garde-manger</button>
-  </div>
   <header class="top">
     <div>
-      <div class="top-sub" id="listSub">—</div>
+      <div class="top-sub"><span class="sync-dot" id="syncDot" title="Synchronisation"></span><span class="sr" id="syncTxt">en ligne</span><span id="listSub">—</span></div>
       <h1 class="top-title" id="listTitle">La liste</h1>
     </div>
     <div class="people" id="people"></div>
@@ -455,13 +473,8 @@
   <div class="basket" id="basket" hidden></div>
 </section>
 
-<!-- ============ BILAN ============ -->
 <!-- ============ GARDE-MANGER ============ -->
 <section class="tab" id="tab-pantry">
-  <div class="list-seg" role="tablist" aria-label="Courses ou garde-manger">
-    <button type="button" role="tab" data-tab="list">Courses</button>
-    <button type="button" role="tab" data-tab="pantry">Garde-manger</button>
-  </div>
   <header class="top">
     <div>
       <div class="top-sub" id="pantrySub">—</div>
@@ -519,50 +532,17 @@
   <div class="days" id="days"></div>
 </section>
 
-<section class="tab" id="tab-bilan">
-  <header class="top">
-    <div>
-      <div class="top-sub">Ce mois-ci</div>
-      <h1 class="top-title">Bilan</h1>
-    </div>
-  </header>
-  <div class="stats4">
-    <div class="stat"><span class="k">Dépensé</span><span class="v" id="b-spent">0 €</span></div>
-    <div class="stat" id="b-reste-card"><span class="k">Restant</span><span class="v" id="b-reste">—</span></div>
-    <div class="stat"><span class="k">Achats</span><span class="v" id="b-count">0</span></div>
-    <div class="stat"><span class="k">Panier moyen</span><span class="v" id="b-avg">—</span></div>
-  </div>
-  <div class="section">
-    <div class="h2">Par semaine</div>
-    <div class="card" id="weekly"></div>
-  </div>
-  <div class="section">
-    <div class="h2">Par catégorie</div>
-    <div class="card" id="bycat"></div>
-  </div>
-  <div class="section">
-    <div class="h2">Mois par mois</div>
-    <div class="card">
-      <div id="compare"></div>
-      <canvas id="chart" height="190" style="width:100%;display:none"></canvas>
-    </div>
-  </div>
-</section>
-
 <!-- ============ RÉGLAGES ============ -->
 <section class="tab" id="tab-settings">
   <header class="top">
-    <div>
-      <div class="top-sub">Ton app</div>
+    <button class="round-btn" type="button" data-goto="home" aria-label="Retour à l'accueil" style="margin-right:12px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m15 6-6 6 6 6"/></svg></button>
+    <div style="flex:1">
+      <div class="top-sub">Courses &amp; Dîners</div>
       <h1 class="top-title">Réglages</h1>
     </div>
   </header>
   <div class="section" style="margin-top:8px">
     <div class="card" style="margin-top:0">
-      <div class="set-row">
-        <div><label class="set-label" for="setBudget">Budget mensuel</label><div class="set-sub">Objectif courses par mois</div></div>
-        <input class="field" id="setBudget" type="number" inputmode="decimal" min="0" placeholder="400">
-      </div>
       <div class="set-row">
         <div><label class="set-label" for="setName">Ton prénom</label><div class="set-sub">Affiché sur la liste partagée</div></div>
         <input class="field" id="setName" type="text" placeholder="Maman">
@@ -578,17 +558,6 @@
       <button class="btn-full ghost" type="button" id="shareBtn2">Partager le lien</button>
     </div>
   </div>
-  <div class="section">
-    <div class="h2">Nouveau mois</div>
-    <div class="card">
-      <p class="p-muted">Le mois change tout seul le 1er. Tu peux aussi archiver maintenant : les dépenses partent dans l'historique et la liste est vidée.</p>
-      <button class="btn-full danger" type="button" id="resetBtn">Démarrer un nouveau mois</button>
-    </div>
-  </div>
-  <div class="section">
-    <div class="h2">Historique</div>
-    <div class="card" id="archives"></div>
-  </div>
 </section>
 
 </div>
@@ -596,44 +565,23 @@
 <!-- NAV -->
 <div class="nav-wrap">
   <nav id="nav" aria-label="Navigation">
-    <button class="nav-btn active" data-tab="home" aria-label="Accueil" type="button">
+    <button class="nav-btn active" data-tab="home" type="button">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M3 11 12 4l9 7v9H3z"/></svg>
+      <span class="lbl">Accueil</span>
     </button>
-    <button class="nav-btn" data-tab="list" aria-label="Liste de courses" type="button">
+    <button class="nav-btn" data-tab="list" type="button">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01"/></svg>
-      <span class="badge" id="listBadge"></span>
+      <span class="lbl">Courses</span><span class="badge" id="listBadge"></span>
     </button>
-    <div class="nav-fab"><button class="fab" id="fab" aria-label="Ajouter une dépense" type="button">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
-    </button></div>
-    <button class="nav-btn" data-tab="menus" aria-label="Menus de la semaine" type="button">
+    <button class="nav-btn" data-tab="pantry" type="button">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3h8v3H8zM7 6h10a1 1 0 0 1 1 1v12a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V7a1 1 0 0 1 1-1zM6 11h12"/></svg>
+      <span class="lbl">Placards</span><span class="badge warn" id="pantryBadge"></span>
+    </button>
+    <button class="nav-btn" data-tab="menus" type="button">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 3v8M5 3v4a2 2 0 0 0 4 0V3M7 11v10M17 21V3c-2 1.5-3 4-3 7v3h3"/></svg>
-      <span class="dot-badge" id="ideasBadge"></span>
-    </button>
-    <button class="nav-btn" data-tab="bilan" aria-label="Bilan" type="button">
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M5 20V11M12 20V5M19 20v-6"/></svg>
+      <span class="lbl">Dîners</span><span class="dot-badge" id="ideasBadge"></span>
     </button>
   </nav>
-</div>
-
-<!-- SHEET : AJOUT DÉPENSE -->
-<div class="overlay" id="expenseSheet">
-  <form class="sheet" id="expenseForm" autocomplete="off">
-    <div class="grab"></div>
-    <div class="sheet-title">Nouvelle dépense</div>
-    <div class="amount-wrap">
-      <label class="lbl" for="expAmount">Montant</label>
-      <input class="amount-input" id="expAmount" type="text" inputmode="decimal" placeholder="0,00 €">
-    </div>
-    <label class="sr" for="expName">Magasin</label>
-    <input class="text-field" id="expName" type="text" placeholder="Magasin (Lidl, Carrefour…)" list="storeList">
-    <datalist id="storeList"></datalist>
-    <div class="chips" id="catChips" role="radiogroup" aria-label="Catégorie"></div>
-    <div class="sheet-actions">
-      <button class="btn-cancel" type="button" data-close>Annuler</button>
-      <button class="btn-ok" type="submit">Ajouter</button>
-    </div>
-  </form>
 </div>
 
 <!-- SHEET : PARTAGE -->
@@ -646,19 +594,6 @@
     <div class="sheet-actions">
       <button class="btn-cancel" type="button" data-close>Fermer</button>
       <button class="btn-ok" type="button" id="copyShare">Copier le lien</button>
-    </div>
-  </div>
-</div>
-
-<!-- SHEET : NOUVEAU MOIS -->
-<div class="overlay" id="resetSheet">
-  <div class="sheet">
-    <div class="grab"></div>
-    <div class="sheet-title">Nouveau mois ?</div>
-    <p class="p-muted">Les dépenses seront archivées dans l'historique et la liste de courses sera vidée.</p>
-    <div class="sheet-actions">
-      <button class="btn-cancel" type="button" data-close>Annuler</button>
-      <button class="btn-ok" type="button" id="confirmReset">Confirmer</button>
     </div>
   </div>
 </div>
@@ -790,21 +725,7 @@ const SHARE_BASE = 'https://jojo97343.github.io/budgetcourse/';
 // ============================================================
 // CONSTANTES
 // ============================================================
-const MONTHS = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
 const MONTHS_S = ['Jan','Fév','Mar','Avr','Mai','Juin','Juil','Août','Sep','Oct','Nov','Déc'];
-const CATS = [
-  { id: 'Courses', tint: '#DCEFCF' },
-  { id: 'Viande/Poisson', tint: '#F5D9D2' },
-  { id: 'Légumes/Fruits', tint: '#D4ECD9' },
-  { id: 'Produits laitiers', tint: '#DCE6F5' },
-  { id: 'Boulangerie', tint: '#F6E6C8' },
-  { id: 'Hygiène/Entretien', tint: '#E8DDF2' },
-  { id: 'Animaux', tint: '#EFE3D3' },
-  { id: 'Boissons', tint: '#D3ECEB' },
-  { id: 'Épicerie', tint: '#F2E9C9' },
-  { id: 'Autre', tint: '#E3E9E0' }
-];
-const CAT_COLORS = ['#2F6B4F','#4F7FB8','#C9853A','#8E6BB0','#3E9A97','#B5584B','#7C8B3A','#9A7A55','#5C6B62','#C26F99'];
 const PEOPLE_TINTS = ['#DCEFCF','#DCE6F5','#F6E6C8','#E8DDF2','#F5D9D2','#D3ECEB','#F2E9C9'];
 
 // Rayons de la liste (déduits du nom de l'article)
@@ -823,7 +744,7 @@ const RAYONS = [
 // ============================================================
 // ÉTAT
 // ============================================================
-let local = { budget: 0, userName: 'Maman', listCode: '', expenses: [], archives: [], lastMonth: '', familyName: '' };
+let local = { userName: 'Maman', listCode: '', familyName: '' };
 
 const urlParams = new URLSearchParams(window.location.search);
 const FAMILLE_CODE = (urlParams.get('liste') || '').trim().toUpperCase() || null;
@@ -832,9 +753,7 @@ const OWNER = (urlParams.get('de') || '').trim().slice(0, 30);
 
 let shoppingItems = [];
 let realtimeSub = null;
-let showAll = false;
 let showBasket = false;
-let selectedCat = 'Courses';
 let pendingItem = null;
 let pendingIdea = null;   // idée tapée avant d'avoir donné son prénom // article tapé avant d'avoir donné son prénom (mode famille)
 
@@ -861,11 +780,7 @@ function loadLocal() {
 // ============================================================
 function esc(s) { return String(s ?? '').replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c])); }
 function norm(s) { return String(s || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/œ/g, 'oe'); }
-function fmt(n) { return (n || 0).toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' €'; }
-function fmt0(n) { return Math.round(n || 0).toLocaleString('fr-FR') + ' €'; }
 function uid() { return Math.random().toString(36).slice(2, 10); }
-function catLabel(c) { return String(c || 'Autre').replace(/^[^\p{L}]+\s*/u, '') || 'Autre'; }
-function catInfo(c) { const l = catLabel(c); return CATS.find(x => x.id === l) || CATS[CATS.length - 1]; }
 function initials(name) {
   const w = String(name || '?').trim().split(/\s+/).filter(Boolean);
   if (w.length === 0) return '?';
@@ -878,16 +793,6 @@ function rayonOf(name) {
   for (const r of RAYONS) if (r.words.some(w => n.includes(w))) return r.name;
   return 'Autres';
 }
-function dayLabel(iso) {
-  const d = new Date(iso); const t = new Date();
-  const d0 = new Date(d.getFullYear(), d.getMonth(), d.getDate());
-  const t0 = new Date(t.getFullYear(), t.getMonth(), t.getDate());
-  const diff = Math.round((t0 - d0) / 86400000);
-  if (diff === 0) return "Aujourd'hui";
-  if (diff === 1) return 'Hier';
-  return d.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'short' });
-}
-function parseAmount(v) { return parseFloat(String(v).replace(/[^\d,.-]/g, '').replace(',', '.')); }
 
 let toastTimer;
 function toast(msg) {
@@ -900,26 +805,6 @@ function setSync(online) {
 }
 
 // ============================================================
-// MOIS
-// ============================================================
-function monthKey(d = new Date()) { return `${d.getFullYear()}-${d.getMonth()}`; }
-function checkAutoReset() {
-  const cur = monthKey();
-  if (local.lastMonth && local.lastMonth !== cur) archiveMonth(local.lastMonth);
-  local.lastMonth = cur; saveLocal();
-}
-function archiveMonth(key) {
-  if (local.expenses.length === 0) return;
-  let y, m;
-  if (key) { [y, m] = key.split('-').map(Number); }
-  else { const d = new Date(); y = d.getFullYear(); m = d.getMonth(); }
-  const total = local.expenses.reduce((s, e) => s + e.amount, 0);
-  local.archives.unshift({ month: `${MONTHS_S[m]} ${y}`, budget: local.budget, total, count: local.expenses.length });
-  local.archives = local.archives.slice(0, 12);
-  local.expenses = [];
-}
-
-// ============================================================
 // SUPABASE : LISTE
 // ============================================================
 async function loadShoppingList() {
@@ -927,6 +812,7 @@ async function loadShoppingList() {
     const { data, error } = await sb.from('shopping_lists').select('*').eq('list_code', listCode()).order('created_at', { ascending: true });
     if (error) throw error;
     shoppingItems = data || [];
+    if (!IS_FAMILLE) noteFrequent(shoppingItems);
     setSync(true);
   } catch (e) { setSync(false); }
 }
@@ -972,118 +858,13 @@ async function clearChecked() {
 }
 
 // ============================================================
-// DÉPENSES
-// ============================================================
-function addExpense(name, amount, cat) {
-  local.expenses.push({ id: uid(), date: new Date().toISOString(), name, amount, cat });
-  saveLocal(); renderAll();
-  toast('Dépense ajoutée');
-}
-function deleteExpense(id) {
-  const e = local.expenses.find(x => x.id === id);
-  if (!e || !confirm(`Supprimer « ${e.name} » (${fmt(e.amount)}) ?`)) return;
-  local.expenses = local.expenses.filter(x => x.id !== id);
-  saveLocal(); renderAll();
-}
-function frequentStores() {
-  const count = {};
-  local.expenses.forEach(e => { const k = e.name.trim(); count[k] = (count[k] || 0) + 1; });
-  return Object.entries(count).sort((a, b) => b[1] - a[1]).map(([n]) => n);
-}
-function weekTotal() {
-  const now = new Date(); const start = new Date(now);
-  start.setDate(now.getDate() - ((now.getDay() + 6) % 7)); start.setHours(0, 0, 0, 0);
-  return local.expenses.filter(e => new Date(e.date) >= start).reduce((s, e) => s + e.amount, 0);
-}
-
-// ============================================================
 // RENDU
 // ============================================================
 function renderAll() {
   if (IS_FAMILLE) { renderList(); return; }
-  renderHome(); renderList(); renderBilan(); renderSettings(); renderMenus(); renderTodayMenu();
+  renderList(); renderSettings(); renderMenus(); renderPantry(); updatePantryBadge(); renderHome();
 }
 
-function renderHome() {
-  const now = new Date();
-  const total = local.expenses.reduce((s, e) => s + e.amount, 0);
-  const budget = local.budget;
-  $('hello').textContent = 'Bonjour ' + (local.userName || '');
-  $('monthTitle').textContent = MONTHS[now.getMonth()];
-
-  const hero = $('hero');
-  if (!(budget > 0)) {
-    hero.innerHTML = `<div class="hero-empty">
-      <div class="ring-big">${fmt(total)}</div>
-      <p>dépensés ce mois-ci. Fixe un budget pour suivre ce qu'il te reste.</p>
-      <button class="pill-btn" type="button" data-goto="settings">Définir mon budget</button></div>`;
-  } else {
-    const reste = budget - total;
-    const pct = Math.min(total / budget, 1);
-    const C = 2 * Math.PI * 80;
-    const dayOfMonth = now.getDate();
-    const daysInMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
-    const elapsed = dayOfMonth / daysInMonth;
-    const projected = total > 0 ? (total / dayOfMonth) * daysInMonth : 0;
-    const over = projected > budget + 5;
-    const stroke = reste < 0 ? 'var(--danger)' : (pct >= .85 ? 'var(--warn-stroke)' : 'var(--accent)');
-    const markerOff = -(C * elapsed) + 1;
-    hero.innerHTML = `
-      <div class="ring">
-        <svg width="196" height="196" viewBox="0 0 196 196" role="img" aria-label="${Math.round(pct * 100)} % du budget utilisé">
-          <circle cx="98" cy="98" r="80" fill="none" stroke="var(--soft)" stroke-width="16"/>
-          <circle class="prog" cx="98" cy="98" r="80" fill="none" stroke="${stroke}" stroke-width="16" stroke-linecap="${pct > 0 ? 'round' : 'butt'}" stroke-dasharray="${(C * pct).toFixed(1)} ${C.toFixed(1)}" transform="rotate(-90 98 98)"/>
-          <circle cx="98" cy="98" r="80" fill="none" stroke="var(--ink)" stroke-width="22" stroke-dasharray="2 ${C}" stroke-dashoffset="${markerOff.toFixed(1)}" transform="rotate(-90 98 98)" opacity=".55"/>
-        </svg>
-        <div class="ring-center">
-          <span class="ring-small">${reste < 0 ? 'dépassement' : 'il reste'}</span>
-          <span class="ring-big ${reste < 0 ? 'neg' : ''}">${fmt0(Math.abs(reste))}</span>
-          <span class="ring-small">sur ${fmt0(budget)}</span>
-        </div>
-      </div>
-      <div class="mini-grid">
-        <div class="mini"><span class="k">Cette semaine</span><span class="v">${fmt(weekTotal())}</span></div>
-        <div class="mini ${total === 0 ? '' : (over ? 'warn' : 'ok')}"><span class="k">Projection fin de mois</span><span class="v">${total === 0 ? '—' : fmt(projected)}</span></div>
-      </div>`;
-  }
-
-  // Ajout rapide : magasins les plus fréquents
-  const stores = frequentStores().slice(0, 3);
-  const defaults = ['Lidl', 'Carrefour', 'Boulangerie'];
-  for (const d of defaults) if (stores.length < 3 && !stores.some(s => norm(s) === norm(d))) stores.push(d);
-  $('quickGrid').innerHTML = stores.map(s => `
-    <button class="quick" type="button" data-quick="${esc(s)}">
-      <span class="avatar av-32" style="background:${hashTint(s)}">${esc(initials(s))}</span><span>${esc(s)}</span>
-    </button>`).join('') + `
-    <button class="quick" type="button" data-quick="">
-      <span class="avatar av-32" style="background:var(--soft)">+</span><span>Autre</span>
-    </button>`;
-  $('storeList').innerHTML = frequentStores().map(s => `<option value="${esc(s)}">`).join('');
-
-  // Récemment
-  const sorted = [...local.expenses].sort((a, b) => new Date(b.date) - new Date(a.date));
-  const shown = showAll ? sorted : sorted.slice(0, 5);
-  $('toggleAllBtn').hidden = sorted.length <= 5;
-  $('toggleAllBtn').textContent = showAll ? 'Réduire' : 'Tout voir';
-  if (sorted.length === 0) {
-    $('recentList').innerHTML = `<div class="empty">Aucune dépense ce mois-ci.<br>Appuie sur + pour commencer.</div>`;
-    return;
-  }
-  let html = '', lastDay = '';
-  for (const e of shown) {
-    const dl = dayLabel(e.date);
-    if (dl !== lastDay) { html += `<div class="day-label">${esc(dl)}</div>`; lastDay = dl; }
-    const ci = catInfo(e.cat);
-    html += `<div class="exp">
-      <span class="tile" style="background:${ci.tint}">${esc(initials(e.name))}</span>
-      <span class="exp-info"><span class="exp-name">${esc(e.name)}</span><span class="exp-meta">${esc(catLabel(e.cat))}</span></span>
-      <span class="exp-amt">${fmt(e.amount)}</span>
-      <button class="icon-btn" type="button" data-del-exp="${esc(e.id)}" aria-label="Supprimer ${esc(e.name)}">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
-      </button></div>`;
-  }
-  $('recentList').innerHTML = html;
-}
 
 function canDeleteItem(item) {
   if (!IS_FAMILLE) return true;
@@ -1141,118 +922,14 @@ function renderList() {
   $('basket').hidden = !showBasket || done.length === 0;
   $('basket').innerHTML = done.length ? `<div class="group">${done.map(i => itemRow(i)).join('')}</div>` : '';
   $('basketClear').hidden = IS_FAMILLE; // seul le propriétaire vide le panier
+  renderHome();
 }
 
-function renderBilan() {
-  const total = local.expenses.reduce((s, e) => s + e.amount, 0);
-  const budget = local.budget;
-  const reste = budget - total;
-  $('b-spent').textContent = fmt(total);
-  $('b-count').textContent = local.expenses.length;
-  $('b-avg').textContent = local.expenses.length ? fmt(total / local.expenses.length) : '—';
-  $('b-reste').textContent = budget > 0 ? (reste < 0 ? '−' + fmt(-reste) : fmt(reste)) : '—';
-  $('b-reste-card').classList.toggle('neg', budget > 0 && reste < 0);
 
-  // Par semaine
-  const weekBudget = budget > 0 ? budget / 4.33 : 0;
-  const weeks = {};
-  local.expenses.forEach(e => {
-    const d = new Date(e.date); const mon = new Date(d);
-    mon.setDate(d.getDate() - ((d.getDay() + 6) % 7)); mon.setHours(0, 0, 0, 0);
-    const k = mon.toISOString();
-    if (!weeks[k]) {
-      const sun = new Date(mon); sun.setDate(mon.getDate() + 6);
-      weeks[k] = { label: `${mon.getDate()} – ${sun.getDate()} ${sun.toLocaleString('fr-FR', { month: 'short' })}`, total: 0 };
-    }
-    weeks[k].total += e.amount;
-  });
-  const wk = Object.keys(weeks).sort().reverse();
-  const maxW = Math.max(weekBudget, ...wk.map(k => weeks[k].total), 1);
-  $('weekly').innerHTML = wk.length === 0 ? `<p class="p-muted">Aucune dépense pour l'instant.</p>` :
-    wk.map(k => {
-      const w = weeks[k];
-      const cls = weekBudget > 0 ? (w.total > weekBudget ? 'over' : w.total > weekBudget * .8 ? 'warn' : '') : '';
-      return `<div class="bar-row"><span class="lbl">${esc(w.label)}</span>
-        <span class="track"><span class="fill ${cls}" style="display:block;width:${(w.total / maxW * 100).toFixed(1)}%"></span></span>
-        <span class="amt">${fmt(w.total)}</span></div>`;
-    }).join('') + (weekBudget > 0 ? `<p class="p-muted" style="margin-top:8px">Repère : ${fmt(weekBudget)} par semaine</p>` : '');
-
-  // Par catégorie
-  const cats = {};
-  local.expenses.forEach(e => { const l = catLabel(e.cat); cats[l] = (cats[l] || 0) + e.amount; });
-  const sc = Object.entries(cats).sort((a, b) => b[1] - a[1]);
-  $('bycat').innerHTML = sc.length === 0 ? `<p class="p-muted">Aucune dépense pour l'instant.</p>` :
-    sc.map(([c, v], i) => `<div class="bar-row">
-      <span class="lbl"><span class="dot" style="background:${CAT_COLORS[i % CAT_COLORS.length]}"></span>${esc(c)}</span>
-      <span class="track"><span class="fill" style="display:block;width:${(v / sc[0][1] * 100).toFixed(1)}%;background:${CAT_COLORS[i % CAT_COLORS.length]}"></span></span>
-      <span class="amt">${fmt(v)}</span></div>`).join('');
-
-  renderCompare(total, budget);
-}
-
-function renderCompare(totalNow, budget) {
-  const el = $('compare'); const canvas = $('chart');
-  const now = new Date();
-  const all = [...local.archives].reverse().concat([{ month: MONTHS_S[now.getMonth()], total: totalNow, budget, current: true }]);
-  if (all.length < 2) {
-    el.innerHTML = `<p class="p-muted">L'évolution apparaîtra après ton premier mois archivé.</p>`;
-    canvas.style.display = 'none'; return;
-  }
-  const prev = all[all.length - 2], curr = all[all.length - 1];
-  const diff = curr.total - prev.total;
-  const avg = all.slice(0, -1).reduce((s, m) => s + m.total, 0) / (all.length - 1);
-  const vs = curr.total - avg;
-  el.innerHTML = `<div class="cmp-grid">
-    <div class="cmp"><div class="k">vs mois dernier</div><div class="v ${diff > 0 ? 'up' : 'down'}">${diff > 0 ? '+' : '−'}${fmt(Math.abs(diff))}</div><div class="s">${esc(prev.month)}</div></div>
-    <div class="cmp"><div class="k">vs moyenne</div><div class="v ${vs > 0 ? 'up' : 'down'}">${vs > 0 ? '+' : '−'}${fmt(Math.abs(vs))}</div><div class="s">moyenne ${fmt(avg)}</div></div>
-  </div>`;
-
-  canvas.style.display = 'block';
-  const dpr = window.devicePixelRatio || 1;
-  const W = canvas.clientWidth || 300, H = 190;
-  canvas.width = W * dpr; canvas.height = H * dpr;
-  const ctx = canvas.getContext('2d'); ctx.scale(dpr, dpr); ctx.clearRect(0, 0, W, H);
-  const maxVal = Math.max(...all.map(m => m.total), budget || 0) * 1.15 || 1;
-  const n = all.length, chartH = 130, baseY = 160;
-  const bw = Math.max(16, Math.min(36, (W - 20) / n - 10));
-  const gap = (W - n * bw) / (n + 1);
-  if (budget > 0) {
-    const by = baseY - budget / maxVal * chartH;
-    ctx.setLineDash([4, 4]); ctx.strokeStyle = '#B4541B'; ctx.lineWidth = 1.2;
-    ctx.beginPath(); ctx.moveTo(0, by); ctx.lineTo(W, by); ctx.stroke(); ctx.setLineDash([]);
-    ctx.fillStyle = '#8A3D10'; ctx.font = '600 10px Manrope, sans-serif'; ctx.textAlign = 'right';
-    ctx.fillText('budget', W - 2, by - 4);
-  }
-  all.forEach((m, i) => {
-    const x = gap + i * (bw + gap);
-    const h = m.total / maxVal * chartH, y = baseY - h;
-    const over = (m.budget || budget) > 0 && m.total > (m.budget || budget);
-    ctx.fillStyle = m.current ? (over ? '#A12C1F' : '#2F6B4F') : (over ? '#E7B4AC' : '#C9E8B4');
-    ctx.beginPath();
-    if (ctx.roundRect) ctx.roundRect(x, y, bw, h, [6, 6, 2, 2]); else ctx.rect(x, y, bw, h);
-    ctx.fill();
-    ctx.fillStyle = '#1E2A22'; ctx.textAlign = 'center'; ctx.font = '700 10px Manrope, sans-serif';
-    ctx.fillText(Math.round(m.total), x + bw / 2, y - 5);
-    ctx.fillStyle = '#56635A'; ctx.font = '500 10px Manrope, sans-serif';
-    ctx.fillText(m.month.split(' ')[0] + (m.current ? '*' : ''), x + bw / 2, baseY + 15);
-  });
-  ctx.textAlign = 'left'; ctx.fillStyle = '#56635A'; ctx.font = '500 10px Manrope, sans-serif';
-  ctx.fillText('* mois en cours', 0, H - 2);
-}
 
 function renderSettings() {
-  $('setBudget').value = local.budget || '';
   $('setName').value = local.userName || '';
   $('myCode').textContent = local.listCode || '—';
-  const el = $('archives');
-  el.innerHTML = local.archives.length === 0 ? `<p class="p-muted">Aucun mois archivé pour l'instant.</p>` :
-    local.archives.map(a => {
-      const over = a.budget > 0 && a.total > a.budget;
-      return `<div class="arch"><div>
-        <div style="font-weight:700;font-size:15px">${esc(a.month)}</div>
-        <div class="set-sub">${a.count} achats · budget ${a.budget > 0 ? fmt(a.budget) : 'non défini'}</div></div>
-        <div style="font-family:var(--serif);font-size:18px;font-weight:700;color:${over ? 'var(--danger)' : 'var(--accent)'}">${fmt(a.total)}</div></div>`;
-    }).join('');
 }
 
 // ============================================================
@@ -1305,7 +982,7 @@ function subscribeMenus() {
   if (menuSub) menuSub.unsubscribe();
   menuSub = sb.channel('menus-' + code)
     .on('postgres_changes', { event: '*', schema: 'public', table: 'weekly_menus', filter: `list_code=eq.${code}` },
-      async () => { await loadMenus(); renderMenus(); renderTodayMenu(); })
+      async () => { await loadMenus(); renderMenus(); })
     .subscribe();
 }
 
@@ -1348,6 +1025,7 @@ async function ingredientsToList(list) {
 }
 
 function renderMenus() {
+  renderHome();
   const days = weekDays();
   const s = days[0].date, e = days[6].date;
   const sameMonth = s.getMonth() === e.getMonth();
@@ -1383,21 +1061,6 @@ function renderMenus() {
 }
 
 // Carte « Ce soir » sur l'accueil
-function renderTodayMenu() {
-  const el = $('todayMenu'); if (!el || IS_FAMILLE) return;
-  const today = ymd(new Date());
-  const list = thisWeekMenus;
-  const m = list.find(x => x.day === today && x.slot === 'soir');
-  el.hidden = false;
-  if (m) { el.dataset.goto = 'menus'; delete el.dataset.suggest; }
-  else { delete el.dataset.goto; el.dataset.suggest = ''; }
-  el.innerHTML = `<span class="tile" style="background:var(--lime)">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 3v8M5 3v4a2 2 0 0 0 4 0V3M7 11v10M17 21V3c-2 1.5-3 4-3 7v3h3"/></svg></span>
-    <span style="flex:1;display:flex;flex-direction:column">
-      <span class="k">${m ? 'Ce soir' : 'Rien de prévu ce soir'}</span>
-      <span class="v">${m ? esc(m.dish) : 'Une idée de plat ?'}</span></span>
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8C978F" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>`;
-}
 
 function openMeal(day, slot, prefill) {
   const m = mealAt(day, slot);
@@ -1436,7 +1099,7 @@ $('mealForm').addEventListener('submit', async (ev) => {
   if (!ok) return;
   closeSheet('mealSheet');
   if (editingMeal.ideaId) await deleteIdea(editingMeal.ideaId, true);
-  renderMenus(); renderTodayMenu();
+  renderMenus();
   const toBuy = ingr.filter(i => !(editingMeal.have || []).some(t => termMatches(t, i)));
   if ($('mealToList').checked && toBuy.length) await ingredientsToList(toBuy);
   else if ($('mealToList').checked && ingr.length) toast('Repas enregistré · tu as déjà tout');
@@ -1858,6 +1521,7 @@ function canDeleteIdea(i) {
   return !!local.familyName && norm(i.proposed_by) === norm(local.familyName);
 }
 function renderIdeas() {
+  renderHome();
   const el = $('ideas');
   const badge = $('ideasBadge');
   const isMine = (i) => !IS_FAMILLE && norm(i.proposed_by) === norm(local.userName || 'Maman');
@@ -2010,12 +1674,19 @@ async function pantryRestock(name) {
   const k = norm(name);
   const hits = pantry.items.filter(i => !i.in_stock && norm(i.name) === k);
   for (const h of hits) await pUpdate('pantry_items', h.id, { in_stock: true });
-  if (hits.length && $('tab-pantry').classList.contains('active')) renderPantry();
+  if (hits.length) { updatePantryBadge(); if ($('tab-pantry').classList.contains('active')) renderPantry(); }
 }
 
 function zoneById(id) { return pantry.zones.find(z => String(z.id) === String(id)); }
+function updatePantryBadge() {
+  const b = $('pantryBadge'); if (!b) return;
+  const n = pantry.items.filter(i => !i.in_stock).length;
+  b.textContent = n; b.classList.toggle('on', n > 0 && !IS_FAMILLE);
+  renderHome();
+}
 function renderPantry() {
   if (IS_FAMILLE) return;
+  updatePantryBadge();
   const out = pantry.items.filter(i => !i.in_stock);
   $('pantrySub').textContent = `${pantry.items.length} article${pantry.items.length > 1 ? 's' : ''}${out.length ? ` · ${out.length} épuisé${out.length > 1 ? 's' : ''}` : ''}${pantryRemote ? '' : ' · sur ce téléphone'}`;
   // Endroits
@@ -2159,39 +1830,121 @@ $('pitemForm').addEventListener('submit', async (ev) => {
 });
 
 // ============================================================
+// ACCUEIL (tableau de bord)
+// ============================================================
+const USUAL_DEFAULTS = ['Lait', 'Pain', 'Œufs', 'Bananes', 'Café', 'Beurre'];
+const JOURS = ['dimanche','lundi','mardi','mercredi','jeudi','vendredi','samedi'];
+const MOIS = ['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre'];
+
+// Retient ce qui passe dans la liste pour proposer les articles habituels
+function noteFrequent(items) {
+  local.freq = local.freq || {};
+  const seen = new Set(local.seenIds || []);
+  let changed = false;
+  for (const it of items) {
+    const id = String(it.id);
+    if (seen.has(id)) continue;
+    seen.add(id); changed = true;
+    const k = norm(it.name).trim(); if (!k) continue;
+    const f = local.freq[k] || { name: it.name, c: 0 };
+    f.c += 1; f.name = it.name; f.t = Date.now();
+    local.freq[k] = f;
+  }
+  if (changed) { local.seenIds = [...seen].slice(-600); saveLocal(); }
+}
+function usualItems() {
+  const inList = new Set(shoppingItems.filter(i => !i.checked).map(i => norm(i.name).trim()));
+  const learned = Object.entries(local.freq || {}).filter(([, f]) => f.c >= 2)
+    .sort((a, b) => b[1].c - a[1].c || b[1].t - a[1].t).map(([, f]) => f.name);
+  const out = [];
+  for (const n of [...learned, ...USUAL_DEFAULTS]) {
+    const k = norm(n).trim();
+    if (!inList.has(k) && !out.some(o => norm(o).trim() === k)) out.push(n);
+    if (out.length >= 8) break;
+  }
+  return out;
+}
+function tonightMeal() {
+  const today = ymd(new Date());
+  return (thisWeekMenus || []).find(m => m.day === today && m.slot === 'soir');
+}
+function renderHome() {
+  if (IS_FAMILLE || !$('tab-home')) return;
+  const now = new Date();
+  $('homeDate').textContent = `${JOURS[now.getDay()].replace(/^./, c => c.toUpperCase())} ${now.getDate()} ${MOIS[now.getMonth()]}`;
+  $('homeHello').textContent = `Bonjour ${local.userName || ''}`.trim();
+
+  // Habituels
+  const usual = usualItems();
+  $('usual').innerHTML = usual.length ? `<span class="k">Souvent :</span>` + usual.map(n => `<button type="button" data-usual="${esc(n)}">+ ${esc(n)}</button>`).join('') : '';
+
+  // Courses
+  const todo = shoppingItems.filter(i => !i.checked).sort((a, b) => new Date(b.created_at || 0) - new Date(a.created_at || 0));
+  $('htList').innerHTML = `<span class="k">Courses</span><span class="big">${todo.length}</span>
+    <span class="s">${todo.length === 0 ? 'rien à acheter' : `à prendre`}</span>
+    <span class="prev">${todo.slice(0, 4).map(i => `<span>${esc(i.name)}</span>`).join('')}${todo.length > 4 ? `<span class="more">+ ${todo.length - 4} autre${todo.length - 4 > 1 ? 's' : ''}</span>` : ''}</span>`;
+  $('htList').setAttribute('aria-label', `Courses : ${todo.length} à prendre`);
+
+  // Ce soir
+  const m = tonightMeal();
+  const dEl = $('htDinner');
+  if (m) {
+    const ing = splitIngr(m.ingredients);
+    const missing = ing.filter(i => !isStaple(i) && !inShoppingList(i) && !pantry.items.some(p => p.in_stock && termMatches(p.name, i)));
+    dEl.innerHTML = `<span class="k">Ce soir</span><span class="dish">${esc(m.dish)}</span>
+      <span class="s">${ing.length === 0 ? 'Voir les dîners' : missing.length ? `${missing.length} ingrédient${missing.length > 1 ? 's' : ''} à acheter` : 'Tout est prévu'}</span>`;
+    dEl.dataset.goto = 'menus'; delete dEl.dataset.suggest;
+  } else {
+    dEl.innerHTML = `<span class="k">Ce soir</span><span class="dish">Rien de prévu</span><span class="s">Touche pour une idée</span>`;
+    delete dEl.dataset.goto; dEl.dataset.suggest = '';
+  }
+
+  // Placards
+  const out = pantry.items.filter(i => !i.in_stock);
+  const pEl = $('htPantry');
+  pEl.classList.toggle('warn', out.length > 0);
+  pEl.innerHTML = `<span class="k">Placards</span><span class="big">${out.length || '✓'}</span>
+    <span class="s">${out.length ? `épuisé${out.length > 1 ? 's' : ''} · ${esc(out.slice(0, 2).map(i => i.name.toLowerCase()).join(', '))}${out.length > 2 ? '…' : ''}` : pantry.items.length ? 'tout est en stock' : 'à remplir'}</span>`;
+
+  // Idées
+  const iEl = $('htIdeas');
+  const who = [...new Set(ideas.map(i => i.proposed_by).filter(Boolean))].slice(0, 3);
+  iEl.hidden = !ideasRemote;
+  iEl.innerHTML = ideas.length
+    ? `<span class="people">${who.map(n => `<span class="avatar" style="background:${hashTint(n)}">${esc(initials(n).slice(0, 1))}</span>`).join('')}</span>
+       <span style="flex:1;display:flex;flex-direction:column;min-width:0"><span class="k" style="font-size:14px">${ideas.length} idée${ideas.length > 1 ? 's' : ''} de dîners</span>
+       <span class="s" style="color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(ideas.slice(0, 3).map(i => i.dish).join(', '))}</span></span><span class="go">Voir</span>`
+    : `<span style="flex:1;display:flex;flex-direction:column"><span class="k" style="font-size:14px">Idées de dîners</span><span class="s" style="color:var(--muted)">Aucune pour l'instant</span></span><span class="go">Noter</span>`;
+
+  // Tirage
+  $('htDiceTxt').textContent = m ? 'Je sais pas quoi faire demain' : 'Je sais pas quoi faire ce soir';
+}
+$('homeAdd').addEventListener('submit', async (ev) => {
+  ev.preventDefault();
+  const inp = $('homeAddInput'); const name = inp.value.trim();
+  if (!name) { toast('Écris un article'); return; }
+  if (inShoppingList(name)) { toast('Déjà dans la liste'); inp.value = ''; return; }
+  inp.value = '';
+  if (await addListItem(name)) toast(`${name} : ajouté à la liste`);
+  else inp.value = name;
+});
+
+// ============================================================
 // NAVIGATION & FEUILLES
 // ============================================================
 function showTab(name) {
   document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.id === 'tab-' + name));
-  const navName = name === 'pantry' ? 'list' : name;
-  document.querySelectorAll('.nav-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === navName));
-  document.querySelectorAll('.list-seg button').forEach(b => { b.classList.toggle('on', b.dataset.tab === name); b.setAttribute('aria-selected', b.dataset.tab === name); });
-  if (!IS_FAMILLE && (name === 'list' || name === 'pantry') && local.lastListView !== name) { local.lastListView = name; saveLocal(); }
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === name));
   document.querySelectorAll('#famSeg button').forEach(b => { b.classList.toggle('on', b.dataset.tab === name); b.setAttribute('aria-selected', b.dataset.tab === name); });
   document.body.className = document.body.className.replace(/\bon-\w+/g, '').trim() + ' on-' + name;
   window.scrollTo(0, 0);
-  if (name === 'bilan') renderBilan();
   if (name === 'menus') renderMenus();
+  if (name === 'home') renderHome();
   if (name === 'pantry') { renderPantry(); pLoad().then(renderPantry); }
 }
 function openSheet(id) { $(id).classList.add('open'); }
 function closeSheet(id) { $(id).classList.remove('open'); }
 
-function renderChips() {
-  $('catChips').innerHTML = CATS.map(c => `
-    <button type="button" role="radio" aria-checked="${c.id === selectedCat}" class="chip ${c.id === selectedCat ? 'on' : ''}" data-cat="${esc(c.id)}">
-      <span class="dot" style="background:${c.tint};border:1px solid rgba(0,0,0,.08)"></span>${esc(c.id)}</button>`).join('');
-}
-function openExpense(store = '') {
-  $('expName').value = store;
-  $('expAmount').value = '';
-  // catégorie : celle utilisée la dernière fois pour ce magasin
-  const last = [...local.expenses].reverse().find(e => store && norm(e.name) === norm(store));
-  selectedCat = last ? catLabel(last.cat) : (norm(store).includes('boulang') ? 'Boulangerie' : 'Courses');
-  renderChips();
-  openSheet('expenseSheet');
-  setTimeout(() => $('expAmount').focus(), 250);
-}
 function shareUrl() {
   const p = new URLSearchParams({ liste: local.listCode });
   if (local.userName) p.set('de', local.userName);
@@ -2223,10 +1976,11 @@ async function copyShare() {
 document.addEventListener('click', (ev) => {
   const t = ev.target.closest('button, [data-goto]');
   if (!t) return;
-  if (t.dataset.tab && t.closest('nav') && t.dataset.tab === 'list' && local.lastListView === 'pantry' && !IS_FAMILLE) return showTab('pantry');
   if (t.dataset.tab) return showTab(t.dataset.tab);
   if (t.dataset.zone) { pantryZoneId = t.dataset.zone; local.pantryZone = t.dataset.zone; saveLocal(); return renderPantry(); }
   if (t.id === 'zoneAddChip') return openZones(true);
+  if (t.dataset.usual) { const n = t.dataset.usual; return addListItem(n).then(ok => { if (ok) toast(`${n} : ajouté à la liste`); }); }
+  if (t.id === 'htDice') return openSuggest();
   if (t.id === 'zonesBtn') return openZones(false);
   if (t.id === 'pantryToList') return pantryAllToList();
   if (t.dataset.ptoggle) return togglePantryItem(t.dataset.ptoggle);
@@ -2249,13 +2003,8 @@ document.addEventListener('click', (ev) => {
   if (t.dataset.zcolor) { newZoneColor = t.dataset.zcolor; return renderZonesSheet(); }
   if (t.dataset.suggest !== undefined) return openSuggest();
   if (t.dataset.goto) return showTab(t.dataset.goto);
-  if (t.id === 'fab') return openExpense('');
-  if (t.dataset.quick !== undefined) return openExpense(t.dataset.quick);
-  if (t.dataset.delExp) return deleteExpense(t.dataset.delExp);
   if (t.dataset.delItem) return deleteListItem(t.dataset.delItem);
-  if (t.dataset.cat) { selectedCat = t.dataset.cat; return renderChips(); }
   if (t.hasAttribute('data-close')) return t.closest('.overlay').classList.remove('open');
-  if (t.id === 'toggleAllBtn') { showAll = !showAll; return renderHome(); }
   if (t.id === 'basketToggle') { showBasket = !showBasket; return renderList(); }
   if (t.id === 'basketClear') return clearChecked();
   if (t.id === 'inviteBtn' || t.id === 'shareBtn2') return shareList();
@@ -2266,7 +2015,7 @@ document.addEventListener('click', (ev) => {
     if (!editingMeal) return;
     const { day, slot } = editingMeal;
     closeSheet('mealSheet');
-    return deleteMeal(day, slot).then(() => { renderMenus(); renderTodayMenu(); toast('Repas effacé'); });
+    return deleteMeal(day, slot).then(() => { renderMenus(); toast('Repas effacé'); });
   }
   if (t.id === 'weekPrev') return changeWeek(-1);
   if (t.id === 'weekNext') return changeWeek(1);
@@ -2289,8 +2038,6 @@ document.addEventListener('click', (ev) => {
   if (t.id === 'pickPrev') { pickOffset = Math.max(0, pickOffset - 1); return renderPick(); }
   if (t.id === 'pickNext') { pickOffset += 1; return renderPick(); }
   if (t.id === 'copyShare') return copyShare();
-  if (t.id === 'resetBtn') return openSheet('resetSheet');
-  if (t.id === 'confirmReset') return doReset();
   if (t.id === 'saveSettings') return saveSettings();
 });
 document.addEventListener('submit', async (ev) => {
@@ -2311,14 +2058,6 @@ document.addEventListener('change', (ev) => {
 });
 document.querySelectorAll('.overlay').forEach(o => o.addEventListener('click', e => { if (e.target === o) o.classList.remove('open'); }));
 
-$('expenseForm').addEventListener('submit', (ev) => {
-  ev.preventDefault();
-  const amount = parseAmount($('expAmount').value);
-  const name = $('expName').value.trim() || 'Courses';
-  if (isNaN(amount) || amount <= 0) { toast('Indique un montant'); $('expAmount').focus(); return; }
-  addExpense(name, Math.round(amount * 100) / 100, selectedCat);
-  closeSheet('expenseSheet');
-});
 $('addItemForm').addEventListener('submit', async (ev) => {
   ev.preventDefault();
   const inp = $('itemName'); const name = inp.value.trim();
@@ -2353,19 +2092,9 @@ $('nameForm').addEventListener('submit', async (ev) => {
 });
 
 function saveSettings() {
-  local.budget = parseAmount($('setBudget').value) || 0;
   local.userName = $('setName').value.trim() || 'Maman';
   saveLocal(); renderAll();
   toast('Réglages enregistrés');
-}
-async function doReset() {
-  closeSheet('resetSheet');
-  archiveMonth();
-  local.lastMonth = monthKey(); saveLocal();
-  await sb.from('shopping_lists').delete().eq('list_code', local.listCode);
-  shoppingItems = [];
-  renderAll();
-  toast('Nouveau mois démarré');
 }
 
 // ============================================================
@@ -2374,8 +2103,7 @@ async function doReset() {
 async function init() {
   loadLocal();
   if (IS_FAMILLE) {
-    // Mode famille : uniquement la liste
-    // Mode famille : uniquement la liste, sans navigation
+    // Mode famille : liste et dîners, sans navigation
     document.body.classList.add('famille');
     const owner = OWNER || 'la famille';
     $('listTitle').textContent = OWNER ? `Liste de ${OWNER}` : 'Liste partagée';
@@ -2387,9 +2115,7 @@ async function init() {
     $('fridgeBtn').hidden = true; // « Avec ce qu'il me reste » réservé à la propriétaire
     showTab('list');
     if (!local.familyName) setTimeout(openNameSheet, 400);
-  } else {
-    checkAutoReset();
-  }
+  } else showTab('home');
   await Promise.all([loadShoppingList(), loadMenus(), loadIdeas(), IS_FAMILLE ? null : pLoad()]);
   subscribeRealtime();
   subscribeMenus();
@@ -2399,7 +2125,6 @@ async function init() {
   renderAll();
   $('loading').style.display = 'none';
 }
-window.addEventListener('resize', () => { if ($('tab-bilan').classList.contains('active')) renderBilan(); });
 init();
 </script>
 </body>
