@@ -558,6 +558,15 @@
       <button class="btn-full ghost" type="button" id="shareBtn2">Partager le lien</button>
     </div>
   </div>
+  <div class="section">
+    <div class="h2">Retrouver ma liste</div>
+    <div class="card">
+      <p class="p-muted">Nouveau téléphone ou liste vide ? Tape le code de ta liste habituelle pour la retrouver ici.</p>
+      <label class="sr" for="restoreCode">Code de ta liste</label>
+      <input class="text-field" id="restoreCode" type="text" placeholder="Ex : RYUAAH" maxlength="10" autocapitalize="characters" style="text-transform:uppercase;letter-spacing:.1em">
+      <button class="btn-full ghost" type="button" id="restoreBtn">Utiliser ce code</button>
+    </div>
+  </div>
 </section>
 
 </div>
@@ -750,6 +759,8 @@ const urlParams = new URLSearchParams(window.location.search);
 const FAMILLE_CODE = (urlParams.get('liste') || '').trim().toUpperCase() || null;
 const IS_FAMILLE = !!FAMILLE_CODE;
 const OWNER = (urlParams.get('de') || '').trim().slice(0, 30);
+const MOI = (urlParams.get('moi') || '').trim().toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 10);
+
 
 let shoppingItems = [];
 let realtimeSub = null;
@@ -768,6 +779,8 @@ function loadLocal() {
   try {
     const raw = localStorage.getItem('budgetCourses_v2');
     if (raw) local = { ...local, ...JSON.parse(raw) };
+    // L'adresse ?moi=CODE fait foi : c'est le lien complet de la propriétaire
+    if (!IS_FAMILLE && MOI.length >= 4 && local.listCode !== MOI) { local.listCode = MOI; local.ownerSeen = true; delete local.seenIds; saveLocal(); }
   } catch (e) {}
   if (!local.listCode) {
     local.listCode = Math.random().toString(36).slice(2, 8).toUpperCase();
@@ -1930,6 +1943,24 @@ $('homeAdd').addEventListener('submit', async (ev) => {
 });
 
 // ============================================================
+// LIEN COMPLET DE LA PROPRIÉTAIRE : le code de la liste reste dans l'adresse
+// (pour l'ouvrir sur un autre appareil ou en favori)
+// ============================================================
+function ownerAddressSetup() {
+  try {
+    if (location.search !== '?moi=' + local.listCode) history.replaceState(null, '', location.pathname + '?moi=' + encodeURIComponent(local.listCode));
+  } catch (e) {}
+}
+function useExistingCode() {
+  const v = ($('restoreCode').value || '').trim().toUpperCase().replace(/[^A-Z0-9]/g, '');
+  if (v.length < 4) { toast('Code trop court'); return; }
+  if (v === local.listCode) { toast("C'est déjà ta liste"); return; }
+  if (!confirm(`Utiliser la liste ${v} sur ce téléphone ?`)) return;
+  local.listCode = v; local.ownerSeen = true; delete local.seenIds; saveLocal();
+  location.replace(location.pathname + '?moi=' + v);
+}
+
+// ============================================================
 // NAVIGATION & FEUILLES
 // ============================================================
 function showTab(name) {
@@ -2039,6 +2070,7 @@ document.addEventListener('click', (ev) => {
   if (t.id === 'pickNext') { pickOffset += 1; return renderPick(); }
   if (t.id === 'copyShare') return copyShare();
   if (t.id === 'saveSettings') return saveSettings();
+  if (t.id === 'restoreBtn') return useExistingCode();
 });
 document.addEventListener('submit', async (ev) => {
   if (ev.target.id !== 'ideaForm') return;
@@ -2115,7 +2147,11 @@ async function init() {
     $('fridgeBtn').hidden = true; // « Avec ce qu'il me reste » réservé à la propriétaire
     showTab('list');
     if (!local.familyName) setTimeout(openNameSheet, 400);
-  } else showTab('home');
+  } else {
+    if (!local.ownerSeen) { local.ownerSeen = true; saveLocal(); }
+    ownerAddressSetup();
+    showTab('home');
+  }
   await Promise.all([loadShoppingList(), loadMenus(), loadIdeas(), IS_FAMILLE ? null : pLoad()]);
   subscribeRealtime();
   subscribeMenus();
