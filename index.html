@@ -281,6 +281,15 @@
   .ideas:empty { display: none; }
   .ideas-card { background: #FFF8EC; border: 1.5px solid #F1DFC0; border-radius: var(--r-md); padding: 14px 16px 6px; }
   .ideas-head { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
+  .ideas-toggle { width: 100%; border: 0; background: none; padding: 0; min-height: 44px; display: flex; align-items: center; gap: 8px; text-align: left; color: var(--ink); }
+  .ideas-toggle .ideas-sub { margin-left: auto; }
+  .ideas-toggle .chev { color: var(--muted); flex-shrink: 0; transition: transform .2s; }
+  .ideas-card.open .ideas-toggle .chev { transform: rotate(180deg); }
+  .ideas-card:not(.open) { padding-bottom: 12px; }
+  .ideas-count { min-width: 24px; height: 24px; padding: 0 7px; border-radius: 12px; background: #F1DFC0; color: #7A5A1E; font-size: 12px; font-weight: 800; display: inline-flex; align-items: center; justify-content: center; }
+  .ideas-new { height: 24px; padding: 0 9px; border-radius: 12px; background: var(--warn); color: #fff; font-size: 11px; font-weight: 800; display: inline-flex; align-items: center; white-space: nowrap; }
+  .ideas-peek { font-size: 13px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 2px; }
+  .ideas-body[hidden] { display: none; }
   .ideas-title { font-family: var(--serif); font-size: 17px; font-weight: 700; }
   .ideas-sub { font-size: 12px; color: var(--muted); }
   .idea-form { display: flex; gap: 8px; margin-top: 10px; }
@@ -389,6 +398,7 @@
   body.famille .add-bar { position: fixed; left: 16px; right: 16px; bottom: calc(16px + env(safe-area-inset-bottom)); margin: 0 auto; max-width: 448px; z-index: 100; box-shadow: 0 10px 30px rgba(30,42,34,.16); }
   .me-chip { height: 40px; padding: 0 6px 0 14px; border-radius: 20px; border: 0; background: var(--surface); display: inline-flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 700; flex-shrink: 0; }
   .welcome { margin: 10px 16px 0; background: #E4F1DA; color: var(--accent-dark); border-radius: var(--r-md); padding: 14px 16px; font-size: 14px; line-height: 1.5; display: flex; gap: 12px; align-items: flex-start; }
+  .welcome[hidden] { display: none; }
   .welcome svg { flex-shrink: 0; margin-top: 2px; }
 
   /* TOAST */
@@ -1538,10 +1548,17 @@ function renderIdeas() {
   const el = $('ideas');
   const badge = $('ideasBadge');
   const isMine = (i) => !IS_FAMILLE && norm(i.proposed_by) === norm(local.userName || 'Maman');
-  // Point orange : seulement pour les propositions de la famille
-  if (badge) badge.classList.toggle('on', !IS_FAMILLE && ideas.some(i => !isMine(i)));
+  const seen = new Set((local.ideasSeen || []).map(String));
+  const unseen = ideas.filter(i => !isMine(i) && !seen.has(String(i.id))
+    && !(IS_FAMILLE && local.familyName && norm(i.proposed_by) === norm(local.familyName)));
+  const open = !!local.ideasOpen;
+  if (open && unseen.length) { local.ideasSeen = ideas.map(i => String(i.id)).slice(-300); saveLocal(); }
+  // Point orange : seulement pour les nouvelles propositions de la famille
+  if (badge) badge.classList.toggle('on', !IS_FAMILLE && !open && unseen.length > 0);
   if (!ideasRemote) { el.innerHTML = ''; return; }
   const fromFamily = ideas.filter(i => !isMine(i)).length;
+  const fresh = open ? 0 : unseen.length;
+  const chev = '<svg class="chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>';
   const x = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>';
   const rows = ideas.map(i => `<div class="idea">
       <span class="avatar av-26" style="background:${hashTint(i.proposed_by || '?')}">${esc(initials(i.proposed_by || '?').slice(0, 1))}</span>
@@ -1549,17 +1566,28 @@ function renderIdeas() {
       ${IS_FAMILLE ? '' : `<button class="idea-plan" type="button" data-plan="${esc(i.id)}">Planifier</button>`}
       ${canDeleteIdea(i) ? `<button class="icon-btn" type="button" data-del-idea="${esc(i.id)}" aria-label="Retirer ${esc(i.dish)}">${x}</button>` : ''}
     </div>`).join('');
-  el.innerHTML = `<div class="ideas-card">
-    <div class="ideas-head">
+  el.innerHTML = `<div class="ideas-card ${open ? 'open' : ''}">
+    <button class="ideas-toggle" type="button" id="ideasToggle" aria-expanded="${open}" aria-controls="ideasBody">
       <span class="ideas-title">Idées de dîners</span>
-      <span class="ideas-sub">${IS_FAMILLE ? `${esc(OWNER || 'La cheffe')} choisit` : (fromFamily ? `${fromFamily} de la famille` : 'pour plus tard')}</span>
-    </div>
+      ${ideas.length ? `<span class="ideas-count">${ideas.length}</span>` : ''}
+      ${fresh ? `<span class="ideas-new">${fresh} nouvelle${fresh > 1 ? 's' : ''}</span>` : ''}
+      <span class="ideas-sub">${open ? (IS_FAMILLE ? `${esc(OWNER || 'La cheffe')} choisit` : (fromFamily ? `${fromFamily} de la famille` : 'pour plus tard')) : (ideas.length ? 'Afficher' : (IS_FAMILLE ? 'Proposer' : 'Noter'))}</span>
+      ${chev}
+    </button>
+    ${!open && ideas.length ? `<div class="ideas-peek">${esc(ideas.slice(-4).reverse().map(i => i.dish).join(' · '))}</div>` : ''}
+    <div class="ideas-body" id="ideasBody" ${open ? '' : 'hidden'}>
     <form class="idea-form" id="ideaForm" autocomplete="off">
       <label class="sr" for="ideaInput">${IS_FAMILLE ? 'Proposer un dîner' : 'Noter une idée de dîner'}</label>
       <input id="ideaInput" type="text" placeholder="${IS_FAMILLE ? 'Une envie ? Ex : raclette' : 'Une idée pour plus tard…'}" enterkeyhint="send" maxlength="60">
       <button class="pill-btn" type="submit">${IS_FAMILLE ? 'Proposer' : 'Noter'}</button></form>
     ${rows || `<div class="ideas-empty">${IS_FAMILLE ? "Aucune proposition pour l'instant." : 'Note ici les plats à faire un de ces jours, la famille peut aussi en proposer.'}</div>`}
+    </div>
   </div>`;
+}
+function toggleIdeas() {
+  local.ideasOpen = !local.ideasOpen; saveLocal();
+  renderIdeas();
+  if (local.ideasOpen) { const i = $('ideaInput'); if (i && !ideas.length) i.focus(); }
 }
 
 // Planifier une idée : choisir le soir, puis compléter le repas
@@ -2033,6 +2061,7 @@ document.addEventListener('click', (ev) => {
   }
   if (t.dataset.zcolor) { newZoneColor = t.dataset.zcolor; return renderZonesSheet(); }
   if (t.dataset.suggest !== undefined) return openSuggest();
+  if (t.id === 'htIdeas') { local.ideasOpen = true; saveLocal(); showTab('menus'); renderIdeas(); return; }
   if (t.dataset.goto) return showTab(t.dataset.goto);
   if (t.dataset.delItem) return deleteListItem(t.dataset.delItem);
   if (t.hasAttribute('data-close')) return t.closest('.overlay').classList.remove('open');
@@ -2052,6 +2081,7 @@ document.addEventListener('click', (ev) => {
   if (t.id === 'weekNext') return changeWeek(1);
   if (t.id === 'weekToday') return changeWeek(0);
   if (t.id === 'weekToList') return weekToList();
+  if (t.id === 'ideasToggle') return toggleIdeas();
   if (t.dataset.plan) return openPick(t.dataset.plan);
   if (t.id === 'suggestBtn' || t.dataset.suggest !== undefined) return openSuggest();
   if (t.id === 'suggestAgain') return rollSuggestion();
